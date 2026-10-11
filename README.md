@@ -1,4 +1,4 @@
-# Colt & ColtaneDB
+# ColtLang
 
 <div align="center">
 
@@ -10,21 +10,18 @@
 \____/\____/_/\__/  
 ```
 
-### The Unified Multi-Database Language Powered by the Meld Model
+### ColtLang: The official language specification, AST, and parser for Colt.
 
 [![License: Apache 2.0](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](LICENSE)
 [![Spec: CC-BY-4.0](https://img.shields.io/badge/Spec-CC--BY--4.0-emerald.svg)](spec/LICENSE)
 [![Specification: v0.2 Draft](https://img.shields.io/badge/Colt_Spec-v0.2_(draft)-purple.svg)](spec/SPEC.md)
-[![Tests: 167 Passed](https://img.shields.io/badge/Tests-167%20Passed-brightgreen.svg)](tests/)
-[![PyPI: coltanedb](https://img.shields.io/badge/PyPI-coltanedb-orange.svg)](https://pypi.org/project/coltanedb/)
-[![Deploy: Vercel](https://img.shields.io/badge/Deploy-Vercel-black.svg)](https://coltanedb.vercel.app)
+[![Tests: Passing](https://img.shields.io/badge/Tests-Passing-brightgreen.svg)](tests/)
 
-**Colt** (also written **ColtLang**, file extension `.colt`) is a unified query and data-definition language for working with many kinds of databases through one syntax.<br>
-**ColtaneDB** is the high-performance query orchestrator, compiler, and developer studio built on Colt.
+**Colt** (also written **ColtLang**, file extension `.colt`) is the unified query and data-definition language for working with multiple database engines through one syntax, powered by the Meld Model.
 
 *Conceived and created by **Ayush Bhattacharya**.*
 
-[Live Web Studio](https://coltanedb.vercel.app) • [Language Documentation](DOCUMENTATION.md) • [Language Specification](spec/SPEC.md) • [Python SDK Guide](packages/python/coltanedb/README.md) • [Project Status](docs/STATUS.md)
+[Language Documentation](DOCUMENTATION.md) • [Language Specification](spec/SPEC.md) • [EBNF Grammar](spec/grammar.ebnf) • [VS Code Extension](editors/vscode/) • [Project Status](docs/STATUS.md)
 
 </div>
 
@@ -43,7 +40,6 @@
 - [Consistency & Failure Guarantees](#-consistency--failure-guarantees)
 - [Security Model & Minimal Footprint](#-security-model--minimal-footprint)
 - [Tooling & CLI (`colt`)](#-tooling--cli-colt)
-- [Python SDK (`coltanedb`)](#-python-sdk-coltanedb)
 - [Local Development & Testing](#-local-development--testing)
 - [License & Creator](#-license--creator)
 
@@ -233,7 +229,7 @@ How standard operations compare across the primary database language families:
 
 ## 🔌 Supported Engines & Capabilities
 
-Colt targets **underlying database engine protocols**, not cloud brand names. Provider names (Neon, Supabase, Upstash, Atlas, Turso) are interchangeable hosting presets:
+Colt targets **underlying database engine protocols**, not cloud brand names:
 
 | Capability | `postgres` | `mongodb` | `sqlite` / `libsql` / `d1` | `redis` | `firestore` |
 | :--- | :--- | :--- | :--- | :--- | :--- |
@@ -292,9 +288,6 @@ colt fmt library.colt
 # Execute queries against configured connections
 colt run library.colt
 
-# Start local bridge so the Web IDE can query your local databases
-colt serve --port 3000
-
 # Inspect environment diagnostics and configured engines
 colt doctor
 
@@ -308,54 +301,26 @@ colt rebuild hot_books
 
 ---
 
-## 🐍 Python SDK (`coltanedb`)
-
-The official Python client SDK allows you to execute Colt queries and manage melds programmatically:
-
-```bash
-pip install coltanedb
-```
-
-```python
-import os
-from coltanedb import ColtaneClient
-
-# Load connection aliases from app.colt or environment variables
-db = ColtaneClient.from_file("app.colt")
-
-# Execute a query with bound parameters (safe against injection)
-result = db.run("FIND books WHERE views > $min LIMIT 10", min=10)
-
-# Iterate over returned rows
-for row in result.rows:
-    print(f"Book: {row['title']} (Views: {row['views']})")
-
-# Metadata includes execution timings and stitched connection status
-print(result.meta)
-```
-
----
-
 ## 💻 Local Development & Testing
 
-ColtaneDB is maintained in a TypeScript monorepo with Turborepo and Vitest:
+ColtLang is maintained in a TypeScript monorepo with Turborepo and Vitest:
 
 ```bash
 # 1. Clone repository
-git clone https://github.com/itsjustayush/ColtaneDB.git
-cd ColtaneDB
+git clone https://github.com/ColtLabs/ColtLang.git
+cd ColtLang
 
 # 2. Install dependencies (requires Node.js 24 and pnpm 10.34.6)
 corepack pnpm install
 
-# 3. Run complete test suite (167 conformance, compiler, and adapter tests)
+# 3. Run complete test suite (conformance, compiler, parser, lexer)
 corepack pnpm test
 
 # 4. Run linter and typechecker
 corepack pnpm lint
 corepack pnpm typecheck
 
-# 5. Build distributions
+# 5. Build packages
 corepack pnpm build
 ```
 
@@ -363,7 +328,7 @@ corepack pnpm build
 
 ## ⚖️ License & Creator
 
-- **Engine & Codebase**: [Apache-2.0 License](LICENSE)
+- **Language Engine & Codebase**: [Apache-2.0 License](LICENSE)
 - **Colt Language Specification**: [Creative Commons Attribution 4.0 International (CC-BY-4.0)](spec/LICENSE)
 
 ### Creator

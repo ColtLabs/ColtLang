@@ -1,5 +1,5 @@
 {
-  "name": "coltanedb",
+  "name": "@coltlabs/coltlang",
   "version": "0.0.0",
   "private": true,
   "type": "module",
@@ -9,14 +9,9 @@
   },
   "scripts": {
     "build": "tsc --noEmit",
-    "dev": "tsx server.ts",
-    "start": "tsx server.ts",
     "lint": "eslint .",
     "typecheck": "tsc --noEmit",
-    "test": "vitest run",
-    "python:test": "cd packages/python/coltanedb && py -m unittest discover -s tests",
-    "python:build": "cd packages/python/coltanedb && py -m build",
-    "python:check": "cd packages/python/coltanedb && py -m twine check dist/*"
+    "test": "vitest run"
   },
   "devDependencies": {
     "@coltanedb/cli": "workspace:*",
@@ -28,11 +23,6 @@
     "typescript": "^5.9.3",
     "typescript-eslint": "^8.48.0",
     "vitest": "^4.0.8"
-  },
-  "dependencies": {
-    "@neon/config": "1.8.3",
-    "@neon/env": "1.4.8",
-    "firebase": "^12.19.0"
   },
   "pnpm": {
     "overrides": {
