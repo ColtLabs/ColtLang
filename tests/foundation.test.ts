@@ -9,7 +9,7 @@ describe('workspace foundation', () => {
       engines: { node: string };
     };
 
-    expect(packageJson.name).toBe('coltanedb');
+    expect(packageJson.name).toBe('@coltlabs/coltlang');
     expect(packageJson.packageManager).toBe('pnpm@10.34.6');
     expect(packageJson.engines.node).toBe('24.x');
   });
