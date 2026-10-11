@@ -1,0 +1,14 @@
+[package]
+name = "colt-lexer"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+authors.workspace = true
+repository.workspace = true
+description = "Fast, conformant lexer for the Colt language"
+
+[dependencies]
+colt-span = { workspace = true }
+colt-diagnostics = { workspace = true }
+serde = { workspace = true }
+serde_json = { workspace = true }

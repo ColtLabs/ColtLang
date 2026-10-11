@@ -1,0 +1,33 @@
+[workspace]
+resolver = "2"
+members = [
+    "crates/colt-span",
+    "crates/colt-diagnostics",
+    "crates/colt-ast",
+    "crates/colt-lexer",
+    "crates/colt-parser",
+    "crates/colt-compiler",
+    "crates/colt-fmt",
+    "crates/colt-cli",
+]
+
+[workspace.package]
+version = "0.2.0"
+edition = "2021"
+rust-version = "1.80.0"
+authors = ["ColtLabs"]
+license = "Apache-2.0"
+repository = "https://github.com/ColtLabs/ColtLang"
+
+[workspace.dependencies]
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+colt-span = { path = "crates/colt-span" }
+colt-diagnostics = { path = "crates/colt-diagnostics" }
+colt-ast = { path = "crates/colt-ast" }
+colt-lexer = { path = "crates/colt-lexer" }
+colt-parser = { path = "crates/colt-parser" }
+colt-compiler = { path = "crates/colt-compiler" }
+colt-fmt = { path = "crates/colt-fmt" }
+colt-cli = { path = "crates/colt-cli" }
+

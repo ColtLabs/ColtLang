@@ -1,0 +1,13 @@
+[package]
+name = "colt-diagnostics"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+authors.workspace = true
+repository.workspace = true
+description = "Canonical diagnostic codes, errors, and formatters for the Colt language"
+
+[dependencies]
+colt-span = { workspace = true }
+serde = { workspace = true }
+serde_json = { workspace = true }

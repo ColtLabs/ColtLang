@@ -1,0 +1,16 @@
+[package]
+name = "colt-compiler"
+version = "0.2.0"
+edition = "2021"
+description = "Semantic analyzer, capability checker, and query planner for ColtLang"
+authors = ["ColtLabs"]
+license = "MIT"
+
+[dependencies]
+colt-span = { path = "../colt-span" }
+colt-diagnostics = { path = "../colt-diagnostics" }
+colt-ast = { path = "../colt-ast" }
+colt-lexer = { path = "../colt-lexer" }
+colt-parser = { path = "../colt-parser" }
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
