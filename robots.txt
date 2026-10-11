@@ -1,0 +1,6 @@
+User-agent: *
+Allow: /
+Disallow: /api/v1/auth/
+Disallow: /api/v1/python-worker/
+
+Sitemap: https://coltanedb.vercel.app/sitemap.xml

@@ -1,0 +1,23 @@
+Windows Registry Editor Version 5.00
+
+; Colt file extension association for Windows
+[HKEY_CURRENT_USER\Software\Classes\.colt]
+@="ColtFile"
+"Content Type"="text/x-colt"
+"PerceivedType"="text"
+
+; Colt file type specification
+[HKEY_CURRENT_USER\Software\Classes\ColtFile]
+@="Colt Database Source File"
+
+[HKEY_CURRENT_USER\Software\Classes\ColtFile\DefaultIcon]
+@="\"<PATH_TO_COLT_STUDIO>\",0"
+
+[HKEY_CURRENT_USER\Software\Classes\ColtFile\shell]
+@="open"
+
+[HKEY_CURRENT_USER\Software\Classes\ColtFile\shell\open]
+@="Open with Colt Studio"
+
+[HKEY_CURRENT_USER\Software\Classes\ColtFile\shell\open\command]
+@="\"<PATH_TO_COLT_STUDIO>\" \"%1\""

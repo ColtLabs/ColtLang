@@ -1,0 +1,8 @@
+{
+  "name": "ColtaneDB",
+  "description": "ColtaneDB compiler, query router, and development platform for the Colt query language.",
+  "permissions": [],
+  "capabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}

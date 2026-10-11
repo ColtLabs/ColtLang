@@ -1,0 +1,92 @@
+{
+  "Colt Version Pragma": {
+    "prefix": "pragma",
+    "body": ["#colt 0.2", ""],
+    "description": "Declare Colt 0.2 language version pragma"
+  },
+  "Connect Statement": {
+    "prefix": "connect",
+    "body": [
+      "CONNECT ${1:main} AS ${2|postgres,redis,mongodb,sqlite,libsql,firestore,d1|}(env(\"${3:DATABASE_URL}\"))"
+    ],
+    "description": "Declare an infrastructure connection"
+  },
+  "Default Connection": {
+    "prefix": "default_conn",
+    "body": [
+      "DEFAULT CONNECTION ${1:main}"
+    ],
+    "description": "Set the default connection alias"
+  },
+  "Define Collection Strict": {
+    "prefix": "collection",
+    "body": [
+      "DEFINE COLLECTION ${1:name} STRICT {",
+      "  id: uuid @key,",
+      "  ${2:title}: text,",
+      "  views: int @default(0)",
+      "}"
+    ],
+    "description": "Define a new STRICT collection"
+  },
+  "Define Collection with Backend": {
+    "prefix": "collection_backend",
+    "body": [
+      "DEFINE COLLECTION ${1:name} STRICT @backend(${2:alias}) {",
+      "  id: uuid @key,",
+      "  ${3:title}: text",
+      "}"
+    ],
+    "description": "Define a collection targeting an explicit connection alias"
+  },
+  "Define Meld Link": {
+    "prefix": "meld_link",
+    "body": [
+      "DEFINE MELD ${1:name} LINK ${2:source.field} -> ${3:target.id}"
+    ],
+    "description": "Declare a cross-connection LINK meld"
+  },
+  "Define Meld Sync": {
+    "prefix": "meld_sync",
+    "body": [
+      "DEFINE MELD ${1:name} SYNC ${2:source} TO ${3:target_alias} KEY ${4:id} TTL ${5:10m}"
+    ],
+    "description": "Declare a cross-connection SYNC meld cache projection"
+  },
+  "Define Meld Constraint": {
+    "prefix": "meld_constraint",
+    "body": [
+      "DEFINE MELD ${1:name} CONSTRAINT ${2:source.field} REFERENCES ${3:target.id} MODE ${4|check_on_write,flag,reject|}"
+    ],
+    "description": "Declare a cross-connection CONSTRAINT meld"
+  },
+  "Find Statement": {
+    "prefix": "find",
+    "body": [
+      "FIND ${1:collection}",
+      "SELECT ${2:*}",
+      "WHERE ${3:condition}",
+      "ORDER BY ${4:id} ASC",
+      "LIMIT ${5:20}"
+    ],
+    "description": "Query records using FIND"
+  },
+  "Put Statement": {
+    "prefix": "put",
+    "body": [
+      "PUT ${1:collection}:${2:key} {",
+      "  ${3:field}: ${4:value}",
+      "}"
+    ],
+    "description": "Upsert record by key"
+  },
+  "Atomic Block": {
+    "prefix": "atomic",
+    "body": [
+      "ATOMIC {",
+      "  ${1:PUT statement};",
+      "}"
+    ],
+    "description": "Single-connection atomic transaction block"
+  }
+}

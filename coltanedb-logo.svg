@@ -1,0 +1,48 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="100%" height="100%">
+  <defs>
+    <linearGradient id="topFace" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#38bdf8"/>
+      <stop offset="100%" stop-color="#3ecf8e"/>
+    </linearGradient>
+    <linearGradient id="leftFace" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#1e293b"/>
+      <stop offset="100%" stop-color="#0f172a"/>
+    </linearGradient>
+    <linearGradient id="rightFace" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#0f172a"/>
+      <stop offset="100%" stop-color="#090d16"/>
+    </linearGradient>
+    <radialGradient id="coreGlow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#3ecf8e" stop-opacity="0.35"/>
+      <stop offset="100%" stop-color="#3ecf8e" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+
+  <!-- Ambient Glow -->
+  <circle cx="50" cy="50" r="44" fill="url(#coreGlow)"/>
+
+  <!-- Isometric Polyhedron / Multi-Model Database Node -->
+  <!-- Top Face -->
+  <polygon points="50,15 82,33 50,51 18,33" fill="url(#topFace)" opacity="0.95"/>
+  <!-- Left Face -->
+  <polygon points="18,33 50,51 50,85 18,67" fill="url(#leftFace)" stroke="#38bdf8" stroke-width="1.5" stroke-opacity="0.4"/>
+  <!-- Right Face -->
+  <polygon points="50,51 82,33 82,67 50,85" fill="url(#rightFace)" stroke="#3ecf8e" stroke-width="1.5" stroke-opacity="0.4"/>
+
+  <!-- Model Nodes & Interconnections (Graph, Relational, Vector, KV) -->
+  <!-- Center Core -->
+  <circle cx="50" cy="51" r="4" fill="#38bdf8" />
+  <!-- Node Relational -->
+  <circle cx="34" cy="42" r="2.5" fill="#ffffff" opacity="0.8"/>
+  <circle cx="66" cy="42" r="2.5" fill="#ffffff" opacity="0.8"/>
+  <!-- Node Document -->
+  <circle cx="34" cy="63" r="2.5" fill="#3ecf8e"/>
+  <!-- Node Vector -->
+  <circle cx="66" cy="63" r="2.5" fill="#38bdf8"/>
+
+  <!-- Interconnecting Circuit Beams -->
+  <line x1="34" y1="42" x2="50" y2="51" stroke="#ffffff" stroke-width="1" stroke-dasharray="2,2" opacity="0.6"/>
+  <line x1="66" y1="42" x2="50" y2="51" stroke="#ffffff" stroke-width="1" stroke-dasharray="2,2" opacity="0.6"/>
+  <line x1="34" y1="63" x2="50" y2="51" stroke="#3ecf8e" stroke-width="1" opacity="0.7"/>
+  <line x1="66" y1="63" x2="50" y2="51" stroke="#38bdf8" stroke-width="1" opacity="0.7"/>
+</svg>

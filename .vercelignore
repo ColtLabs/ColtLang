@@ -1,0 +1,17 @@
+.git/
+.github/
+node_modules/
+.pnpm-store/
+.turbo/
+docs/
+spec/
+tests/
+*.md
+*.mdx
+.env
+.env.*
+*.log
+*-firebase-adminsdk-*.json
+**/__pycache__/
+**/*.py[cod]
+tmp-full.txt

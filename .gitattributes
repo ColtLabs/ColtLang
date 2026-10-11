@@ -1,0 +1,5 @@
+# Auto-normalize line endings
+* text=auto eol=lf
+
+# GitHub Linguist override for Colt files (fallback to SQL until Colt is upstreamed in linguist)
+*.colt linguist-language=SQL

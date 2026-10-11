@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<!-- Fragment to merge into your macOS application's Info.plist -->
+<plist version="1.0">
+<dict>
+  <key>CFBundleDocumentTypes</key>
+  <array>
+    <dict>
+      <key>CFBundleTypeName</key>
+      <string>Colt Database Source File</string>
+      <key>CFBundleTypeRole</key>
+      <string>Editor</string>
+      <key>LSHandlerRank</key>
+      <string>Owner</string>
+      <key>LSItemContentTypes</key>
+      <array>
+        <string>com.<REVERSE_DNS_DOMAIN>.colt</string>
+      </array>
+    </dict>
+  </array>
+  <key>UTExportedTypeDeclarations</key>
+  <array>
+    <dict>
+      <key>UTTypeIdentifier</key>
+      <string>com.<REVERSE_DNS_DOMAIN>.colt</string>
+      <key>UTTypeDescription</key>
+      <string>Colt Database Source File</string>
+      <key>UTTypeConformsTo</key>
+      <array>
+        <string>public.source-code</string>
+        <string>public.plain-text</string>
+      </array>
+      <key>UTTypeTagSpecification</key>
+      <dict>
+        <key>public.filename-extension</key>
+        <array>
+          <string>colt</string>
+        </array>
+        <key>public.mime-type</key>
+        <array>
+          <string>text/x-colt</string>
+        </array>
+      </dict>
+    </dict>
+  </array>
+</dict>
+</plist>

@@ -1,0 +1,74 @@
+{
+  "name": "colt",
+  "displayName": "Colt Language Support",
+  "description": "Official syntax highlighting, language configuration, and snippets for the Colt language (.colt) and ColtaneDB.",
+  "version": "0.2.0",
+  "publisher": "itsjustayush",
+  "author": {
+    "name": "Ayush Bhattacharya",
+    "email": "info.cometlabs@gmail.com",
+    "url": "https://github.com/itsjustayush"
+  },
+  "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/itsjustayush/ColtaneDB.git",
+    "directory": "editors/vscode"
+  },
+  "bugs": {
+    "url": "https://github.com/itsjustayush/ColtaneDB/issues"
+  },
+  "homepage": "https://coltanedb.vercel.app",
+  "engines": {
+    "vscode": "^1.75.0"
+  },
+  "categories": [
+    "Programming Languages",
+    "Snippets"
+  ],
+  "keywords": [
+    "colt",
+    "coltlang",
+    "coltanedb",
+    "meld",
+    "database",
+    "query-language",
+    "postgres",
+    "redis",
+    "mongodb"
+  ],
+  "icon": "icon.png",
+  "contributes": {
+    "languages": [
+      {
+        "id": "colt",
+        "aliases": [
+          "Colt",
+          "ColtLang"
+        ],
+        "extensions": [
+          ".colt"
+        ],
+        "firstLine": "^#colt\\b",
+        "configuration": "./language-configuration.json",
+        "icon": {
+          "light": "./icons/colt.svg",
+          "dark": "./icons/colt.svg"
+        }
+      }
+    ],
+    "grammars": [
+      {
+        "language": "colt",
+        "scopeName": "source.colt",
+        "path": "./syntaxes/colt.tmLanguage.json"
+      }
+    ],
+    "snippets": [
+      {
+        "language": "colt",
+        "path": "./snippets/colt.json"
+      }
+    ]
+  }
+}

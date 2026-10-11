@@ -1,0 +1,42 @@
+{
+  "name": "coltanedb",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "packageManager": "pnpm@10.34.6",
+  "engines": {
+    "node": "24.x"
+  },
+  "scripts": {
+    "build": "tsc --noEmit",
+    "dev": "tsx server.ts",
+    "start": "tsx server.ts",
+    "lint": "eslint .",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "python:test": "cd packages/python/coltanedb && py -m unittest discover -s tests",
+    "python:build": "cd packages/python/coltanedb && py -m build",
+    "python:check": "cd packages/python/coltanedb && py -m twine check dist/*"
+  },
+  "devDependencies": {
+    "@coltanedb/cli": "workspace:*",
+    "@eslint/js": "^10.0.1",
+    "@types/node": "^24.10.0",
+    "eslint": "^10.0.1",
+    "tsx": "^4.19.3",
+    "turbo": "^2.6.3",
+    "typescript": "^5.9.3",
+    "typescript-eslint": "^8.48.0",
+    "vitest": "^4.0.8"
+  },
+  "dependencies": {
+    "@neon/config": "1.8.3",
+    "@neon/env": "1.4.8",
+    "firebase": "^12.19.0"
+  },
+  "pnpm": {
+    "overrides": {
+      "jwks-rsa>jose": "4.15.9"
+    }
+  }
+}

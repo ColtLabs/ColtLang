@@ -1,0 +1,49 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      # Must run before setup-node's pnpm cache initialization.
+      - name: Set up pnpm
+        uses: pnpm/action-setup@v6
+        with:
+          version: 10.34.6
+          run_install: false
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm lint
+      - run: pnpm typecheck
+      - run: pnpm test
+      - run: pnpm build
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - name: Test Python SDK
+        run: |
+          pip install -e .
+          python -m unittest discover -s tests -v
+        working-directory: packages/python/coltanedb
+      - name: Build & Validate Python Package
+        run: |
+          pip install build twine
+          python -m build
+          twine check dist/*
+        working-directory: packages/python/coltanedb
+

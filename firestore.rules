@@ -1,0 +1,132 @@
+rules_version = '2';
+
+// ===============================================================
+// Assumed Data Model
+// ===============================================================
+//
+// This security rules file assumes the following data structures:
+//
+// Collection: users
+// Document ID: {userId} (matches request.auth.uid)
+// Fields:
+//   - email: string (required, valid email format, max 128 chars) - User's primary email address
+//   - displayName: string (optional, max 100 chars) - User's public profile name
+//   - tenantId: string (required, 3-64 chars) - Dedicated TenantGuard partition identifier
+//   - role: string (required, allowed: 'owner', 'member', 'viewer') - Tenant role
+//   - createdAt: timestamp (required, immutable) - Account creation timestamp
+//   - updatedAt: timestamp (required) - Last profile update timestamp
+//
+// Collection: tenants/{tenantId}/c/{collection}/d
+// Document ID: {docId} (alphanumeric document identifier)
+// Fields:
+//   - _tid: string (optional, must match {tenantId} if present) - TenantGuard partition key
+//   - [fields]: arbitrary document attributes stored by ColtaneDB engines
+//
+// ===============================================================
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // ===============================================================
+    // Helper Functions
+    // ===============================================================
+
+    // Check if the user is authenticated
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    // Check if user owns the resource (for user-owned documents)
+    function isOwner(userId) {
+      return isAuthenticated() && request.auth.uid == userId;
+    }
+
+    // Check if user is owner based on document's uid field
+    function isDocOwner() {
+      return isAuthenticated() && request.auth.uid == resource.data.uid;
+    }
+
+    // Verify UID hasn't been tampered with on create
+    function uidUnchanged() {
+      return !('uid' in request.resource.data) ||
+        request.resource.data.uid == request.auth.uid;
+    }
+
+    // Ensure uid field is not modified on update
+    function uidNotModified() {
+      return !('uid' in request.resource.data) ||
+        request.resource.data.uid == resource.data.uid;
+    }
+
+    // Validate email format
+    function isValidEmail(email) {
+      return email is string &&
+        email.matches("^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$");
+    }
+
+    // Validate string length bounds
+    function validStringLength(field, minLen, maxLen) {
+      return request.resource.data[field] is string &&
+        request.resource.data[field].size() >= minLen &&
+        request.resource.data[field].size() <= maxLen;
+    }
+
+    // Domain validator for User profiles
+    function isValidUser(data) {
+      return data.keys().hasAll(['email', 'tenantId', 'role']) &&
+        isValidEmail(data.email) &&
+        data.email.size() <= 128 &&
+        data.tenantId is string &&
+        data.tenantId.size() >= 3 &&
+        data.tenantId.size() <= 64 &&
+        data.role in ['owner', 'member', 'viewer'] &&
+        (!('displayName' in data) || (data.displayName is string && data.displayName.size() <= 100));
+    }
+
+    // Domain validator for Tenant documents
+    function isValidTenantRecord(data, tenantId) {
+      return (!('_tid' in data) || data._tid == tenantId) &&
+        data.keys().size() <= 100;
+    }
+
+    // Check if user is authorized for the given tenant partition
+    function isTenantAuthorized(tenantId) {
+      return isAuthenticated() && (
+        request.auth.uid == tenantId ||
+        (request.auth.token != null && 'tenant_id' in request.auth.token && request.auth.token.tenant_id == tenantId)
+      );
+    }
+
+    // ===============================================================
+    // Collection Rules
+    // ===============================================================
+
+    // User profiles collection
+    match /users/{userId} {
+      allow read: if isOwner(userId);
+      allow create: if isAuthenticated() &&
+                    isOwner(userId) &&
+                    isValidUser(request.resource.data) &&
+                    (request.resource.data.role == 'member' || request.resource.data.role == 'viewer');
+      allow update: if isAuthenticated() &&
+                    isOwner(userId) &&
+                    isValidUser(request.resource.data) &&
+                    request.resource.data.role == resource.data.role &&
+                    (!('createdAt' in resource.data) || request.resource.data.createdAt == resource.data.createdAt);
+      allow delete: if false; // Profiles are never deleted directly by client SDK
+    }
+
+    // Multi-tenant partitioned data under TenantGuard
+    match /tenants/{tenantId}/c/{collection}/d/{docId} {
+      allow read: if isTenantAuthorized(tenantId);
+      allow create: if isTenantAuthorized(tenantId) && isValidTenantRecord(request.resource.data, tenantId);
+      allow update: if isTenantAuthorized(tenantId) && isValidTenantRecord(request.resource.data, tenantId);
+      allow delete: if isTenantAuthorized(tenantId);
+    }
+
+    // Default deny for all other collections
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

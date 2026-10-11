@@ -1,0 +1,25 @@
+{
+  "name": "@coltanedb/cli",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Colt command line interface: lex, parse, check, and plan .colt source offline.",
+  "bin": {
+    "colt": "./src/main.ts",
+    "coltane": "./src/main.ts"
+  },
+  "exports": {
+    ".": "./src/main.ts"
+  },
+  "files": [
+    "src"
+  ],
+  "scripts": {
+    "build": "tsc --noEmit -p tsconfig.json",
+    "colt": "node ./src/main.ts"
+  },
+  "dependencies": {
+    "@coltanedb/compiler": "workspace:*",
+    "@coltanedb/parser": "workspace:*"
+  }
+}

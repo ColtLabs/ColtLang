@@ -1,0 +1,49 @@
+#colt 0.2
+-- Colt v0.2 example: a small library catalogue.
+-- Run with: colt check examples/library.colt
+
+CONNECT main AS postgres(env("DATABASE_URL"))
+DEFAULT CONNECTION main
+
+DEFINE COLLECTION authors STRICT {
+  id: uuid @key,
+  name: text @unique,
+  joined: time @default(now)
+}
+
+DEFINE COLLECTION books STRICT {
+  id: uuid @key,
+  title: text,
+  author: link<authors>,
+  tags: list<text>,
+  published: time?,
+  metadata: doc,
+  embedding: vector(3) @index(hnsw),
+  views: int @default(0)
+}
+
+FIND books SELECT title, author, metadata.edition
+WHERE views > 10 AND published != null
+ORDER BY views DESC
+LIMIT 20 OFFSET 0
+
+PUT books:11111111-1111-4111-8111-111111111111 {
+  title: "The Left Hand of Darkness",
+  author: authors:22222222-2222-4222-8222-222222222222,
+  tags: ["science-fiction", "classic"],
+  metadata: { edition: 3, language: "en" },
+  embedding: [0.12, -0.4, 0.88]
+}
+
+CREATE books {
+  title: "Untitled Draft",
+  author: authors:22222222-2222-4222-8222-222222222222,
+  tags: [],
+  metadata: {},
+  embedding: [0.0, 0.0, 0.0]
+}
+
+ATOMIC {
+  DELETE books:33333333-3333-4333-8333-333333333333;
+  PUT authors:22222222-2222-4222-8222-222222222222 { name: "Ursula K. Le Guin" }
+}

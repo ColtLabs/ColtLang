@@ -1,0 +1,80 @@
+(* Colt v0.2 normative grammar. Keywords are case-insensitive. *)
+
+program            = [ pragma ], { statement, [ ";" ] } ;
+pragma             = "#colt", version ;
+version            = digit, { digit }, [ ".", digit, { digit } ] ;
+
+statement          = connect_statement
+                   | default_connection
+                   | define_collection
+                   | find_statement
+                   | put_statement
+                   | create_statement
+                   | delete_statement
+                   | atomic_statement ;
+
+connect_statement  = "CONNECT", identifier, "AS", engine_name, "(", "ENV", "(", string, ")", ")" ;
+default_connection = "DEFAULT", "CONNECTION", identifier ;
+engine_name        = "POSTGRES" | "REDIS" | "MONGODB" | "SQLITE" | "LIBSQL" | "FIRESTORE" | "D1" ;
+
+define_collection  = "DEFINE", "COLLECTION", identifier,
+                    [ "STRICT" | "FLEXIBLE" ], { annotation },
+                    "{", [ field, { ",", field }, [ "," ] ], "}" ;
+field             = identifier, ":", type, [ "?" ], { annotation } ;
+type              = primitive_type
+                  | "LIST", "<", type, ">"
+                  | "LINK", "<", identifier, ">"
+                  | "VECTOR", "(", integer, ")" ;
+primitive_type    = "UUID" | "TEXT" | "INT" | "FLOAT" | "BOOL"
+                  | "TIME" | "DURATION" | "DOC" ;
+annotation        = "@", annotation_name, [ "(", annotation_argument, { ",", annotation_argument }, ")" ] ;
+annotation_name   = identifier | "KEY" | "UNIQUE" | "DEFAULT" | "INDEX" | "TTL"
+                  | "STORAGE" | "TIMESERIES" | "BACKEND" | "READONLY" ;
+annotation_argument = [ identifier, ":" ], expression ;
+
+find_statement    = "FIND", identifier, "SELECT", projection,
+                    [ "WHERE", expression ],
+                    [ "ORDER", "BY", field_path, [ "ASC" | "DESC" ] ],
+                    [ "LIMIT", integer ], [ "OFFSET", integer ] ;
+projection        = field_path, { ",", field_path } ;
+
+put_statement     = "PUT", record_id, object_literal ;
+create_statement  = "CREATE", identifier, [ ":", record_key ], object_literal ;
+delete_statement  = "DELETE", ( record_id | identifier, "WHERE", expression ) ;
+atomic_statement  = "ATOMIC", "{", { put_statement | create_statement | delete_statement }, "}" ;
+record_id         = identifier, ":", record_key ;
+record_key        = identifier | string | integer ;
+object_literal    = "{", [ object_field, { ",", object_field }, [ "," ] ], "}" ;
+object_field      = identifier, ":", expression ;
+
+expression        = or_expression ;
+or_expression     = and_expression, { "OR", and_expression } ;
+and_expression    = comparison, { "AND", comparison } ;
+comparison        = additive, [ ( "==" | "!=" | "<" | "<=" | ">" | ">=" | "IN" ), additive ] ;
+additive          = multiplicative, { ( "+" | "-" ), multiplicative } ;
+multiplicative    = unary, { ( "*" | "/" | "%" ), unary } ;
+unary             = [ "NOT" | "-" ], primary ;
+primary           = literal | parameter | record_id | function_call | object_literal
+                  | list_literal | field_path | "(", expression, ")" ;
+function_call     = identifier, "(", [ expression, { ",", expression } ], ")" ;
+list_literal      = "[", [ expression, { ",", expression }, [ "," ] ], "]" ;
+field_path        = identifier, { ".", identifier | "[", integer, "]" } ;
+literal           = string | integer | float | duration | time | "TRUE" | "FALSE" | "NULL" ;
+parameter         = "$", identifier ;
+
+identifier        = letter, { letter | digit | "_" } ;
+integer           = digit, { digit } ;
+float             = digit, { digit }, ".", digit, { digit }, [ exponent ] ;
+duration          = integer, ( "s" | "m" | "h" | "d" ) ;
+time              = ISO-8601 timestamp with timezone ;
+string            = '"', { any character except quote, backslash, newline
+                            | escape_sequence }, '"' ;
+escape_sequence   = "\\", ( '"' | "\\" | "n" | "r" | "t" | "u", hex, hex, hex, hex ) ;
+exponent          = ( "e" | "E" ), [ "+" | "-" ], digit, { digit } ;
+letter            = "A" … "Z" | "a" … "z" | "_" ;
+digit             = "0" … "9" ;
+hex               = digit | "A" … "F" | "a" … "f" ;
+
+(* LIVE, FETCH, NEAREST, SINCE, WINDOW, RELATE, DEFINE EDGE/POLICY, SET, GET,
+   and DEFINE MELD (... LINK | SYNC | CONSTRAINT) are reserved; they are intentionally
+   absent from the normative productions. *)

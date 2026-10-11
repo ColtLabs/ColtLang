@@ -1,0 +1,14 @@
+#colt 0.2
+
+CONNECT main  AS postgres(env("DATABASE_URL"))
+CONNECT cache AS redis(env("REDIS_URL"))
+CONNECT notes AS mongodb(env("MONGO_URL"))
+DEFAULT CONNECTION main
+
+DEFINE COLLECTION authors STRICT { id: uuid @key, name: text @unique }
+DEFINE COLLECTION books   STRICT { id: uuid @key, title: text, author: link<authors>, views: int @default(0) }
+DEFINE COLLECTION reviews FLEXIBLE @backend(notes) { id: uuid @key, book: link<books>, body: text, meta: doc }
+
+DEFINE MELD book_reviews LINK       reviews.book -> books.id
+DEFINE MELD hot_books    SYNC       books TO cache KEY id TTL 10m
+DEFINE MELD review_book  CONSTRAINT reviews.book REFERENCES books.id MODE check_on_write

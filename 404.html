@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>404: Not Found — ColtaneDB Cluster Route</title>
+  <meta name="description" content="The requested route or entity was not found in the ColtaneDB cluster. Return to home or explore the interactive Colt query studio.">
+  <meta name="theme-color" content="#08090c">
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://coltanedb.vercel.app/404">
+  <meta property="og:title" content="404: Route Not Found — ColtaneDB">
+  <meta property="og:description" content="The requested path could not be resolved by the ColtaneDB cluster router.">
+  <meta property="og:image" content="https://coltanedb.vercel.app/og-image.png">
+
+  <!-- Favicons -->
+  <link rel="icon" type="image/x-icon" href="/favicon.ico">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+  <link rel="icon" type="image/svg+xml" href="/coltanedb-logo.svg">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  <link rel="manifest" href="/site.webmanifest">
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --bg: #08090c;
+      --surface: #0e1117;
+      --card-bg: rgba(18, 22, 31, 0.75);
+      --border: rgba(255, 255, 255, 0.08);
+      --border-glow: rgba(56, 189, 248, 0.3);
+      --text: #f1f5f9;
+      --text-muted: #94a3b8;
+      --text-dim: #64748b;
+      --accent: #38bdf8;
+      --accent-soft: rgba(56, 189, 248, 0.12);
+      --emerald: #34d399;
+      --rose: #f43f5e;
+      --rose-soft: rgba(244, 63, 94, 0.12);
+      --code-bg: #07090e;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+      font-family: 'Geist', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      background-image: 
+        radial-gradient(circle at 50% 20%, rgba(244, 63, 94, 0.08), transparent 45%),
+        radial-gradient(circle at 80% 80%, rgba(56, 189, 248, 0.08), transparent 50%);
+      background-attachment: fixed;
+    }
+
+    a {
+      color: var(--accent);
+      text-decoration: none;
+      transition: color 0.15s ease;
+    }
+
+    a:hover {
+      color: #7dd3fc;
+      text-decoration: underline;
+    }
+
+    /* Top Nav */
+    .top-nav {
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      background: rgba(8, 9, 12, 0.85);
+      border-bottom: 1px solid var(--border);
+      padding: 0.75rem 1.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      color: var(--text);
+      text-decoration: none;
+    }
+
+    .brand strong {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 18px;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 1.25rem;
+    }
+
+    .nav-link {
+      font-size: 13.5px;
+      color: var(--text-muted);
+      font-weight: 500;
+      text-decoration: none;
+      transition: color 0.15s ease;
+    }
+
+    .nav-link:hover {
+      color: var(--text);
+      text-decoration: none;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.6rem 1.15rem;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      border: 1px solid var(--border);
+      background: rgba(255, 255, 255, 0.05);
+      color: var(--text);
+      transition: all 0.2s ease;
+      text-decoration: none;
+    }
+
+    .btn:hover {
+      background: rgba(255, 255, 255, 0.1);
+      border-color: rgba(255, 255, 255, 0.25);
+      text-decoration: none;
+      transform: translateY(-1px);
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #0284c7, #0ea5e9);
+      border-color: #38bdf8;
+      color: #ffffff;
+      box-shadow: 0 0 15px rgba(14, 165, 233, 0.35);
+    }
+
+    .btn-primary:hover {
+      background: linear-gradient(135deg, #0369a1, #0284c7);
+      box-shadow: 0 0 20px rgba(14, 165, 233, 0.55);
+    }
+
+    /* Main Error Container */
+    .error-wrapper {
+      max-width: 760px;
+      margin: auto;
+      padding: 3rem 1.5rem;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .error-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0.25rem 0.75rem;
+      border-radius: 9999px;
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      background: var(--rose-soft);
+      border: 1px solid rgba(244, 63, 94, 0.3);
+      color: var(--rose);
+      margin-bottom: 1.5rem;
+    }
+
+    .giant-code {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: clamp(72px, 14vw, 130px);
+      font-weight: 800;
+      letter-spacing: -0.05em;
+      line-height: 1;
+      background: linear-gradient(135deg, #ffffff 30%, #94a3b8 70%, #38bdf8 100%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      text-shadow: 0 0 40px rgba(56, 189, 248, 0.2);
+      margin-bottom: 0.75rem;
+    }
+
+    .error-title {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: clamp(20px, 4vw, 28px);
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      margin-bottom: 0.75rem;
+    }
+
+    .error-desc {
+      font-size: 15px;
+      color: var(--text-muted);
+      max-width: 520px;
+      margin-bottom: 2rem;
+      line-height: 1.6;
+    }
+
+    /* Interactive Terminal Simulator */
+    .terminal-card {
+      width: 100%;
+      background: var(--code-bg);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+      text-align: left;
+      margin-bottom: 2rem;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+    }
+
+    .terminal-header {
+      background: rgba(255, 255, 255, 0.03);
+      border-bottom: 1px solid var(--border);
+      padding: 0.6rem 1rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 11.5px;
+      color: var(--text-dim);
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    .terminal-dots {
+      display: flex;
+      gap: 6px;
+    }
+
+    .terminal-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+    }
+
+    .terminal-body {
+      padding: 1.25rem;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 13px;
+      line-height: 1.7;
+      color: #94a3b8;
+    }
+
+    .terminal-prompt {
+      color: var(--accent);
+    }
+
+    .terminal-err {
+      color: var(--rose);
+      font-weight: 600;
+    }
+
+    .terminal-hint {
+      color: var(--emerald);
+    }
+
+    .btn-group {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 0.75rem;
+    }
+
+    /* Footer */
+    footer {
+      border-top: 1px solid var(--border);
+      background: rgba(8, 9, 12, 0.95);
+      padding: 2rem 1.5rem;
+      margin-top: auto;
+    }
+
+    .footer-inner {
+      max-width: 860px;
+      margin: 0 auto;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 1.5rem;
+      font-size: 13px;
+      color: var(--text-dim);
+    }
+
+    .footer-links {
+      display: flex;
+      gap: 1.25rem;
+      flex-wrap: wrap;
+    }
+
+    @media (max-width: 640px) {
+      .nav-links {
+        display: none;
+      }
+      .error-wrapper {
+        padding: 2rem 1rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Top Nav -->
+  <header class="top-nav">
+    <a href="/" class="brand" aria-label="ColtaneDB Homepage">
+      <svg style="width:26px; height:26px;" viewBox="0 0 100 100" fill="none">
+        <polygon points="50,15 82,33 50,51 18,33" fill="#38bdf8"/>
+        <polygon points="18,33 50,51 50,85 18,67" fill="#131c2e" stroke="#38bdf8" stroke-width="2"/>
+        <polygon points="50,51 82,33 82,67 50,85" fill="#0d1420" stroke="#3ecf8e" stroke-width="2"/>
+      </svg>
+      <strong>ColtaneDB</strong>
+    </a>
+
+    <nav class="nav-links" aria-label="Main Navigation">
+      <a href="/" class="nav-link">Home</a>
+      <a href="/studio" class="nav-link">Colt Studio</a>
+      <a href="/builder" class="nav-link">Schema Designer</a>
+      <a href="/table" class="nav-link">Table Explorer</a>
+      <a href="/docs" class="nav-link">Docs</a>
+      <a href="/privacy" class="nav-link">Privacy</a>
+    </nav>
+
+    <div style="display:flex; align-items:center; gap:0.75rem;">
+      <a href="/" class="btn btn-primary">⚡ Return Home</a>
+    </div>
+  </header>
+
+  <!-- Error Presentation -->
+  <main class="error-wrapper">
+    <div class="error-badge">HTTP 404 • ROUTE UNRESOLVED</div>
+    <div class="giant-code">404</div>
+    <h1 class="error-title">Cluster Route Not Found</h1>
+    <p class="error-desc">
+      The requested entity, table endpoint, or workspace path could not be resolved by the ColtaneDB multi-model cluster router.
+    </p>
+
+    <!-- Simulated Terminal Output -->
+    <div class="terminal-card">
+      <div class="terminal-header">
+        <div class="terminal-dots">
+          <div class="terminal-dot" style="background:#ef4444;"></div>
+          <div class="terminal-dot" style="background:#f59e0b;"></div>
+          <div class="terminal-dot" style="background:#10b981;"></div>
+        </div>
+        <span>colt-router-diagnostics</span>
+      </div>
+      <div class="terminal-body">
+        <div><span class="terminal-prompt">&gt; colt cluster resolve</span> <span id="dyn-route-path">/unknown</span></div>
+        <div class="terminal-err">✖ Error [E404_ROUTE_NOT_FOUND]: Target path does not exist in cluster index.</div>
+        <div style="color:var(--text-dim); margin-top:0.35rem;">
+          &nbsp;&nbsp;at ColtaneRouter.lookupRoute (server.ts:397)<br>
+          &nbsp;&nbsp;at TenantGuard.evaluateBoundary (packages/tenant/guard.ts:42)<br>
+          &nbsp;&nbsp;at MultiModelDispatcher.route (packages/compiler/dispatcher.ts:89)
+        </div>
+        <div style="margin-top:0.75rem;" class="terminal-hint">
+          ✔ Suggestion: Return to the dashboard or jump to an active workspace below.
+        </div>
+      </div>
+    </div>
+
+    <!-- Quick Navigation Buttons -->
+    <div class="btn-group">
+      <a href="/" class="btn btn-primary">⚡ Return to Home</a>
+      <a href="/studio" class="btn">🛠️ Launch Colt Studio</a>
+      <a href="/table" class="btn">📊 Table Explorer</a>
+      <a href="/builder" class="btn">📐 Schema Designer</a>
+      <a href="/privacy" class="btn">📜 Privacy Policy</a>
+    </div>
+  </main>
+
+  <!-- Global Footer -->
+  <footer>
+    <div class="footer-inner">
+      <div style="display:flex; align-items:center; gap:0.6rem;">
+        <svg style="width:20px; height:20px;" viewBox="0 0 100 100" fill="none">
+          <polygon points="50,15 82,33 50,51 18,33" fill="#38bdf8"/>
+          <polygon points="18,33 50,51 50,85 18,67" fill="#131c2e" stroke="#38bdf8" stroke-width="2"/>
+          <polygon points="50,51 82,33 82,67 50,85" fill="#0d1420" stroke="#3ecf8e" stroke-width="2"/>
+        </svg>
+        <span>&copy; 2026 ColtaneDB. Created by <strong>Ayush Bhattacharya</strong>.</span>
+      </div>
+
+      <nav class="footer-links" aria-label="Footer Navigation">
+        <a href="/">Home</a>
+        <a href="/studio">Colt Studio</a>
+        <a href="/builder">Schema Designer</a>
+        <a href="/table">Table Explorer</a>
+        <a href="/docs">Docs</a>
+        <a href="/privacy">Privacy Policy</a>
+        <a href="https://github.com/itsjustayush/ColtaneDB" target="_blank" rel="noopener">GitHub</a>
+      </nav>
+    </div>
+  </footer>
+
+  <script>
+    // Dynamically display the attempted path
+    const currentPath = window.location.pathname || '/unknown';
+    const dynElem = document.getElementById('dyn-route-path');
+    if (dynElem) {
+      dynElem.textContent = currentPath;
+    }
+  </script>
+</body>
+</html>

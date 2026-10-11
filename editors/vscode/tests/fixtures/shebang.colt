@@ -1,0 +1,12 @@
+#!/usr/bin/env colt
+#colt 0.2
+
+CONNECT main AS postgres(env("DATABASE_URL"))
+DEFAULT CONNECTION main
+
+DEFINE COLLECTION items STRICT {
+  id: uuid @key,
+  name: text
+}
+
+FIND items SELECT id, name WHERE id != null LIMIT 10
