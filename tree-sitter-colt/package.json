@@ -1,0 +1,39 @@
+{
+  "name": "tree-sitter-colt",
+  "version": "0.1.0",
+  "description": "Tree-sitter grammar for ColtLang (.colt)",
+  "main": "bindings/node",
+  "keywords": [
+    "parser",
+    "lexer",
+    "tree-sitter",
+    "colt",
+    "coltlang"
+  ],
+  "author": "Ayush Bhattacharya <info.cometlabs@gmail.com>",
+  "license": "Apache-2.0",
+  "dependencies": {
+    "nan": "^2.20.0"
+  },
+  "devDependencies": {
+    "tree-sitter-cli": "^0.22.6"
+  },
+  "files": [
+    "grammar.js",
+    "binding.gyp",
+    "prebuilds/**",
+    "bindings/node/*",
+    "queries/*",
+    "src/**"
+  ],
+  "tree-sitter": [
+    {
+      "scope": "source.colt",
+      "file-types": [
+        "colt"
+      ],
+      "highlights": "queries/highlights.scm",
+      "injection-regex": "^colt$"
+    }
+  ]
+}

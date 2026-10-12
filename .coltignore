@@ -1,0 +1,12 @@
+# .coltignore
+# Directories and patterns ignored by colt check, colt fmt, and colt-lsp
+
+node_modules/
+target/
+dist/
+build/
+coverage/
+.turbo/
+.git/
+.cargo/
+*.log

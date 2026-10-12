@@ -107,6 +107,6 @@ Every diagnostic has a stable code, message, source span, and actionable hint wh
 - `COLT3xxx`: Access and security errors
 - `COLT4xxx`: Runtime and limit errors
 
-## 9. Python SDK Interoperability
+## 9. Toolchain and Implementation Conformance
 
-The normative parser and compiler are implemented in TypeScript. The official `coltanedb` Python client SDK connects to ColtaneDB execution runtimes or local query bridges (`colt serve`), submitting Colt source without requiring credentials inside `.colt` files.
+ColtLang is implemented as an ultra-fast, zero-dependency native Rust toolchain (`crates/colt-cli`), with a TypeScript reference implementation retained for differential parity. Standalone SDKs (Python, TypeScript, Go) connect to external ColtaneDB runtime servers via standard Colt Toolchain Protocol (CTP) and Colt-RPC contracts. Source code and .colt documents remain strictly independent of database hosting infrastructure.

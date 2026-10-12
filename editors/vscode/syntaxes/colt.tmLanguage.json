@@ -113,7 +113,7 @@
       "patterns": [
         {
           "name": "keyword.control.declaration.colt",
-          "match": "\\b(?i:CONNECT|AS|DEFAULT|CONNECTION|DEFINE|COLLECTION|STRICT|FLEXIBLE|MELD|LINK|SYNC|CONSTRAINT|REFERENCES|MODE)\\b"
+          "match": "\\b(?i:CONNECT|AS|DEFAULT|CONNECTION|DEFINE|COLLECTION|STRICT|FLEXIBLE|MELD|LINK|SYNC|CONSTRAINT|REFERENCES|MODE|VECTORIZE|STREAM|MASK|REDACT|EXPIRE|CASCADE|RESOLVE|FALLBACK|FOR|ROLE|WITH|TIMEOUT|USING)\\b"
         },
         {
           "name": "keyword.control.query.colt",

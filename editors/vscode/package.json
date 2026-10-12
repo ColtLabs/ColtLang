@@ -1,7 +1,7 @@
 {
   "name": "colt",
   "displayName": "Colt Language Support",
-  "description": "Official syntax highlighting, language configuration, and snippets for the Colt language (.colt) and ColtaneDB.",
+  "description": "Official syntax highlighting, language configuration, and snippets for the Colt language (.colt).",
   "version": "0.2.0",
   "publisher": "itsjustayush",
   "author": {
@@ -12,13 +12,12 @@
   "license": "Apache-2.0",
   "repository": {
     "type": "git",
-    "url": "https://github.com/itsjustayush/ColtaneDB.git",
+    "url": "https://github.com/ColtLabs/ColtLang.git",
     "directory": "editors/vscode"
   },
   "bugs": {
-    "url": "https://github.com/itsjustayush/ColtaneDB/issues"
+    "url": "https://github.com/ColtLabs/ColtLang/issues"
   },
-  "homepage": "https://coltanedb.vercel.app",
   "engines": {
     "vscode": "^1.75.0"
   },

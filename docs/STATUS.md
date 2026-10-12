@@ -68,9 +68,25 @@ Current test status:
 - **Grounded LSP Architecture**: Detailed in `docs/COLTSTUDIO_INTEGRATION.md` based strictly on actual compiler model (`publishDiagnostics`, `formatting`, `documentSymbol`, `hover`, `completion`, `definition`).
 - **Zero Runtime Dependencies**: The `colt` binary requires no Node.js runtime, no Python runtime, and no external dynamic libraries; completely self-contained.
 
+- **Tree-sitter Grammar & Syntax Highlighting**:
+  - `tree-sitter-colt/grammar.js`: Formal Tree-sitter grammar covering all statement kinds, expressions, and next-gen MELD primitives (`VECTORIZE`, `STREAM`, `MASK`, `REDACT`, `EXPIRE`, `RESOLVE`, `FALLBACK`).
+  - `tree-sitter-colt/queries/highlights.scm`: Syntax highlighting query for GitHub Linguist, Helix, Neovim, and Zed.
+  - `tree-sitter-colt/package.json` & `tree-sitter-colt/README.md`: Upstream packaging and GitHub Linguist submission guide.
+  - `editors/vscode/`: TextMate grammar (`colt.tmLanguage.json`) and VS Code language extension metadata updated.
+- **Colt Protocol Architecture (CPA)**:
+  - `spec/protocols/CLCP.md`: Colt Language Conformance Protocol.
+  - `spec/protocols/CTP.md`: Colt Toolchain Protocol (machine-readable CLI contract).
+  - `spec/protocols/CLSP.md`: Colt Language Server Profile (LSP integration).
+  - `spec/protocols/CSTP.md`: Colt Security and Trust Profile (zero credentials, `.colt.env`, redaction).
+- **Security & Toolchain Files**:
+  - `.colt.env.example`: Sanitized environment template for local database URLs.
+  - `.gitignore`: Hardened against `.colt.env` and `*.colt.env` secret leaks.
+  - `.coltignore`: Language server and CLI directory exclusion manifest.
+  - `.coltfmt`: Standardized formatter configuration.
+
 ## Exact next step
 
-Integrate precompiled `colt` binary into ColtStudio2 IDE desktop repository using the specification in `docs/COLTSTUDIO_INTEGRATION.md`.
+Package `colt.exe` via release pipeline (`cargo-dist` / GitHub Releases) and integrate into ColtStudio2 IDE desktop repository using the contract in `docs/COLTSTUDIO_INTEGRATION.md`.
 
 
 

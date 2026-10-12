@@ -13,6 +13,9 @@ __pycache__/
 .env
 .env.*
 !.env.example
+.colt.env
+*.colt.env
+!.colt.env.example
 *-firebase-adminsdk-*.json
 *.log
 .DS_Store

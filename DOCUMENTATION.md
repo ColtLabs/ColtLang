@@ -1,13 +1,12 @@
 # The Colt Language Reference & Documentation
 
 **Language:** Colt (also written ColtLang)  
-**File Extension:** `.colt` (for example `app.colt`, `main.colt`, `sampledb.colt`)  
-**Product Built on Colt:** ColtaneDB  
-**Python Package:** `coltanedb`  
+**File Extension:** `.colt` (for example `app.colt`, `main.colt`, `library.colt`)  
 **Specification Version:** 0.2 (draft)  
 **Core Concept:** The Meld Model (MELD = Multi-Engine Link Declaration)  
 **Creator:** Ayush Bhattacharya (`info.cometlabs@gmail.com`)  
-**License:** Apache-2.0 (Code & Runtime) / CC-BY-4.0 (Language Specification)
+**License:** Apache-2.0 (Code & Toolchain) / CC-BY-4.0 (Language Specification)
+
 
 ---
 
@@ -73,10 +72,10 @@
 14. [Engines & Capabilities Matrix](#14-engines-and-capabilities)
 15. [Errors and Diagnostics Catalog](#15-errors-and-diagnostics)
 16. [Security Model](#16-security-model)
-17. [Tooling and the Python SDK](#17-tooling-and-the-python-sdk)
+17. [Tooling & Toolchain Integration](#17-tooling--toolchain-integration)
     - [Command-line Tool colt](#171-command-line-tool-colt)
-    - [Python SDK coltanedb](#172-python-sdk-coltanedb)
-    - [Troubleshooting ModuleNotFoundError](#173-troubleshooting-python-modulenotfounderror)
+    - [Structured Machine-Readable Output](#172-structured-machine-readable-output)
+    - [External IDE Integration](#173-external-ide-integration)
 18. [Appendices](#18-appendices)
     - [Appendix A: Reserved Words](#appendix-a-reserved-words)
     - [Appendix B: Colt at a Glance (SQL vs MongoDB vs Redis vs Colt)](#appendix-b-colt-at-a-glance-for-people-who-know-other-languages)
@@ -685,50 +684,48 @@ Every diagnostic carries a unique code, clear message, source span, and hint:
 
 ---
 
-## 17. Tooling and the Python SDK
+## 17. Tooling & Toolchain Integration
 
 ### 17.1 Command-line Tool `colt`
-| Command | Purpose |
-| :--- | :--- |
-| `colt check file.colt` | Parse and validate; print diagnostics |
-| `colt plan file.colt` | Show the execution plan without running |
-| `colt run file.colt` | Execute against the declared connections |
-| `colt fmt file.colt` | Format source consistently |
-| `colt repl` | Interactive prompt |
-| `colt serve` | Local bridge so the Web IDE can run queries on your machine |
-| `colt doctor` | Print environment diagnostics (versions, paths, set variables) |
-| `colt melds status` | Inspect declared melds [reserved] |
-| `colt melds check` | Verify cross-connection constraints [reserved] |
-| `colt rebuild <meld>` | Rebuild a projection from its source [reserved] |
+| Command | Purpose | Output / Flags |
+| :--- | :--- | :--- |
+| `colt check file.colt` | Parse and validate; print diagnostics | `--json`, `--stdin`, `--quiet` |
+| `colt plan file.colt` | Show the multi-engine execution plan without running | `--json`, `--stdin` |
+| `colt fmt file.colt` | Idempotently format source code | `--stdin`, `--check`, `--json` |
+| `colt parse file.colt` | Parse and print AST as JSON | `--json`, `--stdin` |
+| `colt lex file.colt` | Tokenize and print token stream | `--json`, `--stdin` |
+| `colt capabilities` | Inspect engine capability matrix | `--json` |
+| `colt version` | Print toolchain version | `--json` |
 
-### 17.2 Python SDK `coltanedb`
-```python
-import os
-from coltanedb import ColtaneClient
+### 17.2 Structured Machine-Readable Output
+Every `colt` command accepts `--json` to produce machine-readable contracts designed for external IDEs and CI/CD pipelines. Diagnostics follow a standardized schema:
 
-# Initialize client from .colt file (resolves CONNECT via environment)
-db = ColtaneClient.from_file("app.colt")
-
-# Execute parameterized query
-result = db.run("FIND books WHERE views > $min LIMIT 10", min=10)
-
-for row in result.rows:
-    print(row["title"])
-
-print(result.meta)  # connections used, timings, partial flag
+```json
+{
+  "source": "library.colt",
+  "diagnostics": [
+    {
+      "file": "library.colt",
+      "line": 15,
+      "column": 6,
+      "endLine": 15,
+      "endColumn": 11,
+      "severity": "error",
+      "code": "COLT2002",
+      "message": "Unknown collection 'users'.",
+      "hint": "Declare the collection with DEFINE COLLECTION first.",
+      "span": {
+        "start": { "line": 15, "column": 6, "offset": 240 },
+        "end": { "line": 15, "column": 11, "offset": 245 }
+      }
+    }
+  ]
+}
 ```
 
-### 17.3 Troubleshooting Python `ModuleNotFoundError`
-If you encounter `ModuleNotFoundError: No module named 'coltanedb'` when running `/usr/bin/python3 app.py` despite `pip list` showing the package:
-- **Root Cause**: `pip install` installed the package into the active virtual environment or pyenv (`/home/codespace/.python/current/lib/python3.12/site-packages`), whereas `/usr/bin/python3` explicitly runs the system Linux Python.
-- **Fix (Recommended)**: Run using the active Python environment:
-  ```bash
-  python3 app.py
-  ```
-- **Alternative**: Install directly into the system interpreter:
-  ```bash
-  /usr/bin/python3 -m pip install coltanedb
-  ```
+### 17.3 External IDE Integration
+External editors (such as ColtStudio2, VS Code, Neovim, and Zed) integrate with Colt via standard process execution and IPC without importing internal compiler dependencies. See [`docs/COLTSTUDIO_INTEGRATION.md`](docs/COLTSTUDIO_INTEGRATION.md) for full integration contracts, exit codes, and LSP architecture.
+
 
 ---
 
