@@ -1,0 +1,12 @@
+#colt 0.2
+
+CONNECT postgres AS db URL env("DATABASE_URL")
+DEFAULT CONNECTION db
+
+DEFINE COLLECTION users {
+  id: uuid @key
+  email: text
+}
+
+-- Semantic error: collection 'orders' is not declared
+FIND orders WHERE id = "00000000-0000-0000-0000-000000000001"

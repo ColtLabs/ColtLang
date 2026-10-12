@@ -1,0 +1,11 @@
+#colt 0.2
+
+CONNECT postgres AS db URL env("DATABASE_URL")
+
+DEFINE COLLECTION users {
+  id: uuid @key
+  name: text
+}
+
+-- Syntax error: unterminated string literal
+FIND users WHERE name = "unterminated string

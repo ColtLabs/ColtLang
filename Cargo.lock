@@ -12,6 +12,21 @@ dependencies = [
 ]
 
 [[package]]
+name = "colt-cli"
+version = "0.2.0"
+dependencies = [
+ "colt-ast",
+ "colt-compiler",
+ "colt-diagnostics",
+ "colt-fmt",
+ "colt-lexer",
+ "colt-parser",
+ "colt-span",
+ "serde",
+ "serde_json",
+]
+
+[[package]]
 name = "colt-compiler"
 version = "0.2.0"
 dependencies = [

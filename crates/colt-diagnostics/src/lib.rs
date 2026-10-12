@@ -53,9 +53,35 @@ pub mod codes {
     pub const COLT2027: &str = "COLT2027"; // Unknown engine
 }
 
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "lowercase")]
+pub enum DiagnosticSeverity {
+    Error,
+    Warning,
+    Information,
+    Hint,
+}
+
+impl DiagnosticSeverity {
+    pub fn as_str(&self) -> &'static str {
+        match self {
+            Self::Error => "error",
+            Self::Warning => "warning",
+            Self::Information => "information",
+            Self::Hint => "hint",
+        }
+    }
+}
+
+fn default_severity() -> DiagnosticSeverity {
+    DiagnosticSeverity::Error
+}
+
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub struct ColtDiagnostic {
     pub code: String,
+    #[serde(default = "default_severity")]
+    pub severity: DiagnosticSeverity,
     pub message: String,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub hint: Option<String>,
@@ -66,6 +92,7 @@ impl ColtDiagnostic {
     pub fn new(code: impl Into<String>, message: impl Into<String>, span: SourceSpan) -> Self {
         Self {
             code: code.into(),
+            severity: DiagnosticSeverity::Error,
             message: message.into(),
             hint: None,
             span,
@@ -80,8 +107,25 @@ impl ColtDiagnostic {
     ) -> Self {
         Self {
             code: code.into(),
+            severity: DiagnosticSeverity::Error,
             message: message.into(),
             hint: Some(hint.into()),
+            span,
+        }
+    }
+
+    pub fn with_severity(
+        code: impl Into<String>,
+        severity: DiagnosticSeverity,
+        message: impl Into<String>,
+        hint: Option<String>,
+        span: SourceSpan,
+    ) -> Self {
+        Self {
+            code: code.into(),
+            severity,
+            message: message.into(),
+            hint,
             span,
         }
     }
@@ -89,7 +133,8 @@ impl ColtDiagnostic {
     pub fn format(&self, source_name: &str) -> String {
         let line = self.span.start.line;
         let column = self.span.start.column;
-        let header = format!("{source_name}:{line}:{column}: error [{code}] {message}",
+        let severity_str = self.severity.as_str();
+        let header = format!("{source_name}:{line}:{column}: {severity_str} [{code}] {message}",
             code = self.code,
             message = self.message
         );
@@ -99,6 +144,7 @@ impl ColtDiagnostic {
         }
     }
 }
+
 
 pub fn format_diagnostics(diagnostics: &[ColtDiagnostic], source_name: &str) -> String {
     let mut out = String::new();

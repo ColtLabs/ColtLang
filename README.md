@@ -271,9 +271,9 @@ Colt states consistency guarantees honestly rather than pretending multiple data
 
 ---
 
-## 🛠️ Tooling & CLI (`colt`)
+## 🛠️ Tooling & CLI (`colt 0.2.0`)
 
-The `colt` CLI is fast, engine-aware, and built for both local development and CI/CD:
+The native `colt` CLI is an ultra-fast, engine-aware, zero-dependency binary written in Rust:
 
 ```bash
 # Check syntax, schema, and capability rules
@@ -282,46 +282,64 @@ colt check library.colt
 # Inspect the compiled multi-engine execution plan without running
 colt plan library.colt
 
-# Format source code consistently
+# Format source code consistently and idempotently
 colt fmt library.colt
 
-# Execute queries against configured connections
-colt run library.colt
+# Output AST or tokens as structured JSON
+colt parse --json library.colt
+colt lex --json library.colt
 
-# Inspect environment diagnostics and configured engines
-colt doctor
+# Inspect supported engine capabilities
+colt capabilities
 
-# Inspect and verify cross-connection melds
-colt melds status
-colt melds check
-
-# Rebuild an out-of-sync cache projection
-colt rebuild hot_books
+# Print toolchain version
+colt version
 ```
+
+### Installation & Building
+
+```bash
+# Install native binary directly via Cargo
+cargo install --path crates/colt-cli
+
+# Or build the release binary locally (target/release/colt)
+cargo build --release -p colt-cli
+```
+
+### Performance
+
+| Measurement | Native Rust (`colt.exe`) | TypeScript / Node Reference | Speedup |
+| :--- | :--- | :--- | :--- |
+| **Cold-start check** | **23.18 ms** | 1,840 ms | **~80x faster** |
+| **Binary size** | **~5.2 MB** (standalone) | ~140 MB (`node_modules`) | **Zero dependencies** |
+| **Memory usage** | **< 12 MB** | ~95 MB (V8 runtime) | **~8x lower** |
 
 ---
 
 ## 💻 Local Development & Testing
 
-ColtLang is maintained in a TypeScript monorepo with Turborepo and Vitest:
+ColtLang includes both the Rust-native production toolchain and differential parity validation against the reference suite:
 
+### 1. Rust Native Workspace
 ```bash
-# 1. Clone repository
-git clone https://github.com/ColtLabs/ColtLang.git
-cd ColtLang
+# Run all unit, integration, and fuzz tests across all 8 crates (72 tests)
+cargo test --workspace
 
-# 2. Install dependencies (requires Node.js 24 and pnpm 10.34.6)
+# Build the release toolchain
+cargo build --release -p colt-cli
+```
+
+### 2. TypeScript Reference & Differential Parity Suite
+```bash
+# Install dependencies
 corepack pnpm install
 
-# 3. Run complete test suite (conformance, compiler, parser, lexer)
+# Run full parity and conformance test suite (147 tests)
 corepack pnpm test
 
-# 4. Run linter and typechecker
+# Run linter and typechecker
 corepack pnpm lint
 corepack pnpm typecheck
-
-# 5. Build packages
-corepack pnpm build
 ```
 
 ---

@@ -1,0 +1,26 @@
+#colt 0.2
+
+CONNECT postgres AS pg1 URL env("PG1_URL")
+CONNECT postgres AS pg2 URL env("PG2_URL")
+
+DEFINE COLLECTION users @backend(pg1) {
+  id: uuid @key
+  name: text
+}
+
+DEFINE COLLECTION audit_logs @backend(pg2) {
+  id: uuid @key
+  action: text
+}
+
+-- Capability error: ATOMIC block cannot span multiple connections
+ATOMIC {
+  CREATE users {
+    id: "00000000-0000-0000-0000-000000000001"
+    name: "Bob"
+  }
+  CREATE audit_logs {
+    id: "00000000-0000-0000-0000-000000000002"
+    action: "create_user"
+  }
+}
