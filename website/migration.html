@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hosting & Domain Migration Runbook — ColtLang</title>
+  <meta name="description" content="Step-by-step runbook for migrating ColtLang website and installer endpoints between Vercel, Cloudflare Pages, and custom domains with zero downtime.">
+  <link rel="canonical" href="https://coltlang.dev/migration">
+  
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://coltlang.dev/migration">
+  <meta property="og:title" content="Hosting & Domain Migration Runbook — ColtLang">
+  <meta property="og:description" content="Zero-downtime hosting provider and custom domain migration guide for ColtLang web and installer endpoints.">
+  <meta property="og:image" content="/colt-logo.svg">
+
+  <link rel="icon" type="image/svg+xml" href="/colt-logo.svg">
+  <link rel="stylesheet" href="/styles/main.css">
+  <link rel="stylesheet" href="/styles/docs.css">
+  <script defer src="/scripts/app.js"></script>
+
+  <style>
+    .step-card {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-md);
+      padding: 1.5rem 1.75rem;
+      margin-bottom: 1.5rem;
+    }
+    .step-badge {
+      display: inline-block;
+      padding: 0.2rem 0.6rem;
+      border-radius: var(--radius-sm);
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 0.75rem;
+    }
+    .step-badge-primary {
+      background: rgba(224, 122, 95, 0.15);
+      color: var(--accent-copper);
+    }
+    .step-badge-success {
+      background: rgba(129, 178, 154, 0.15);
+      color: var(--color-success);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Site Navigation -->
+  <header class="site-header">
+    <div class="nav-container">
+      <a href="/" class="brand-link">
+        <img src="/colt-logo.svg" alt="Colt Logo" class="brand-logo">
+        <span>ColtLang</span>
+        <span class="brand-badge">v0.2.0</span>
+      </a>
+
+      <nav>
+        <ul class="nav-links">
+          <li><a href="/" class="nav-link">Home</a></li>
+          <li><a href="/install" class="nav-link">Install</a></li>
+          <li><a href="/docs" class="nav-link">Documentation</a></li>
+          <li><a href="/migration" class="nav-link active">Hosting & Domain</a></li>
+          <li><a href="https://github.com/ColtLabs/ColtLang" target="_blank" rel="noopener" class="nav-link">GitHub ↗</a></li>
+        </ul>
+      </nav>
+
+      <div class="nav-actions">
+        <button id="theme-toggle" class="btn-icon" aria-label="Toggle Theme" title="Toggle theme">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="5"></circle>
+            <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"></path>
+          </svg>
+        </button>
+        <a href="/install" class="btn btn-primary btn-sm">Get Colt</a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Docs Layout -->
+  <div class="docs-layout">
+    
+    <!-- Sidebar Navigation -->
+    <aside class="docs-sidebar">
+      <div class="docs-nav-group">
+        <div class="docs-nav-title">Migration Runbooks</div>
+        <ul class="docs-nav-list">
+          <li class="docs-nav-item active"><a href="#principles">Core Principles</a></li>
+          <li class="docs-nav-item"><a href="#host-migration">Vercel ⇄ Cloudflare</a></li>
+          <li class="docs-nav-item"><a href="#domain-migration">Changing Canonical Domain</a></li>
+          <li class="docs-nav-item"><a href="#endpoints">Installer Endpoint Health</a></li>
+          <li class="docs-nav-item"><a href="#rollback">Safe Rollback Procedures</a></li>
+        </ul>
+      </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="docs-content">
+      <div class="breadcrumbs">
+        <a href="/">ColtLang</a>
+        <span>/</span>
+        <a href="/docs">Documentation</a>
+        <span>/</span>
+        <span>Migration Runbook</span>
+      </div>
+
+      <h1 class="docs-title">Hosting & Domain Migration Runbook</h1>
+      <p class="docs-lead">
+        ColtLang strictly separates brand identity, documentation hosting, and native binary releases. This guide outlines how to migrate between static web hosting providers (such as Vercel and Cloudflare Pages) or switch to a new canonical domain without breaking existing user installations.
+      </p>
+
+      <!-- Section: Principles -->
+      <section id="principles" class="docs-section">
+        <h2>Core Architectural Principles</h2>
+        
+        <div class="step-card">
+          <span class="step-badge step-badge-primary">Principle 1</span>
+          <h3>Hosting Never Hosts Native Binaries</h3>
+          <p>
+            The website serves static documentation, landing pages, and short installation endpoint scripts (<code>/install.ps1</code>, <code>/install.cmd</code>, <code>/install.sh</code>). Native <code>colt</code> executable artifacts are published to and downloaded from verified GitHub Releases with SHA-256 checksum manifests.
+          </p>
+        </div>
+
+        <div class="step-card">
+          <span class="step-badge step-badge-primary">Principle 2</span>
+          <h3>Centralized Canonical Configuration</h3>
+          <p>
+            The public URL is configured in a single file: <code>website/site.config.js</code> via <code>PUBLIC_SITE_URL</code>. All canonical tags, Open Graph headers, and installation copy commands are dynamically generated from this single source of truth. No domain strings are hardcoded in application logic.
+          </p>
+        </div>
+
+        <div class="step-card">
+          <span class="step-badge step-badge-primary">Principle 3</span>
+          <h3>Deterministic Static Build</h3>
+          <p>
+            The website requires no database, authentication system, or Node.js server. The build process (<code>npm run build</code>) outputs pure static HTML, CSS, JavaScript, and installer scripts into <code>website/dist/</code>.
+          </p>
+        </div>
+      </section>
+
+      <!-- Section: Vercel to Cloudflare -->
+      <section id="host-migration" class="docs-section">
+        <h2>Migrating Between Vercel and Cloudflare Pages</h2>
+        <p>
+          Because the same custom domain (e.g. <code>https://coltlang.dev</code>) is retained, <strong>user installation commands never change</strong> during a hosting provider switch.
+        </p>
+
+        <div class="step-card">
+          <span class="step-badge step-badge-success">Step 1</span>
+          <h3>Build and Verify the Static Site Locally</h3>
+          <p>Run the independent website build and test suite:</p>
+          <pre class="terminal-output" style="background: var(--bg-surface); border: 1px solid var(--border-subtle); padding: 1rem; border-radius: var(--radius-md);"><code>cd website
+npm run build
+npm test</code></pre>
+          <p>Verify that <code>dist/</code> contains <code>index.html</code>, <code>install.html</code>, <code>docs.html</code>, <code>migration.html</code>, <code>install.ps1</code>, <code>install.cmd</code>, and <code>install.sh</code>.</p>
+        </div>
+
+        <div class="step-card">
+          <span class="step-badge step-badge-success">Step 2</span>
+          <h3>Deploy to Cloudflare Pages (Parallel Staging)</h3>
+          <ol>
+            <li>Link the GitHub repository in the Cloudflare Pages dashboard.</li>
+            <li>Configure Build Settings:
+              <ul>
+                <li><strong>Build command:</strong> <code>npm run build</code></li>
+                <li><strong>Build output directory:</strong> <code>dist</code></li>
+                <li><strong>Root directory:</strong> <code>website</code></li>
+              </ul>
+            </li>
+            <li>Set Environment Variable: <code>PUBLIC_SITE_URL=https://coltlang.dev</code>.</li>
+            <li>Trigger deployment. Cloudflare Pages assigns a staging URL (e.g. <code>coltlang.pages.dev</code>).</li>
+          </ol>
+        </div>
+
+        <div class="step-card">
+          <span class="step-badge step-badge-success">Step 3</span>
+          <h3>Verify Endpoints on Staging Deployment</h3>
+          <p>Test the installation endpoints before modifying any DNS records:</p>
+          <pre class="terminal-output" style="background: var(--bg-surface); border: 1px solid var(--border-subtle); padding: 1rem; border-radius: var(--radius-md);"><code># Verify HTTP status 200 and Content-Type: text/plain
+curl -I https://coltlang.pages.dev/install.ps1
+curl -I https://coltlang.pages.dev/install.cmd
+curl -I https://coltlang.pages.dev/install.sh</code></pre>
+        </div>
+
+        <div class="step-card">
+          <span class="step-badge step-badge-success">Step 4</span>
+          <h3>Update DNS & Cutover Traffic</h3>
+          <ol>
+            <li>In your DNS registrar (e.g. Cloudflare DNS, Route53, Namecheap), update the CNAME record for <code>coltlang.dev</code> to point to <code>coltlang.pages.dev</code>.</li>
+            <li>Cloudflare automatically issues and provisions the SSL/TLS certificate.</li>
+            <li>Leave the Vercel deployment active for at least 48 hours to serve any lingering DNS caches before deleting the old project.</li>
+          </ol>
+        </div>
+      </section>
+
+      <!-- Section: Domain Migration -->
+      <section id="domain-migration" class="docs-section">
+        <h2>Changing to a New Canonical Domain</h2>
+        <p>
+          If ColtLang migrates to a different domain name in the future:
+        </p>
+        
+        <div class="step-card">
+          <h3>1. Central Configuration Update</h3>
+          <p>Update <code>PUBLIC_SITE_URL</code> in your deployment environment variables or <code>website/site.config.js</code>:</p>
+          <pre class="terminal-output" style="background: var(--bg-surface); border: 1px solid var(--border-subtle); padding: 1rem; border-radius: var(--radius-md);"><code>// website/site.config.js
+const PUBLIC_SITE_URL = process.env.PUBLIC_SITE_URL || 'https://newdomain.org';</code></pre>
+        </div>
+
+        <div class="step-card">
+          <h3>2. Preserving Legacy Redirects (301 Permanent)</h3>
+          <p>
+            Maintain ownership of the old domain and configure HTTP 301 redirects to preserve exact paths. In <code>vercel.json</code> or Cloudflare Page Rules:
+          </p>
+          <pre class="terminal-output" style="background: var(--bg-surface); border: 1px solid var(--border-subtle); padding: 1rem; border-radius: var(--radius-md);"><code>"redirects": [
+  { "source": "/install.ps1", "destination": "https://newdomain.org/install.ps1", "permanent": true },
+  { "source": "/install.cmd", "destination": "https://newdomain.org/install.cmd", "permanent": true },
+  { "source": "/install.sh", "destination": "https://newdomain.org/install.sh", "permanent": true },
+  { "source": "/(.*)", "destination": "https://newdomain.org/$1", "permanent": true }
+]</code></pre>
+          <div class="docs-callout docs-callout-tip">
+            <div class="callout-title">Redirect Handling in CLI Installers</div>
+            Notice that the official installation instructions use <code>curl -fsSL</code> and PowerShell's <code>Invoke-RestMethod</code>, both of which automatically follow HTTP 301/302 redirects seamlessly.
+          </div>
+        </div>
+      </section>
+
+      <!-- Section: Health -->
+      <section id="endpoints" class="docs-section">
+        <h2>Installer Endpoint Health Checklist</h2>
+        <p>Always verify the following criteria after any deployment or DNS change:</p>
+        <ul>
+          <li><strong>MIME Type:</strong> Endpoints return <code>Content-Type: text/plain; charset=utf-8</code> so terminals do not receive HTML error pages.</li>
+          <li><strong>CORS:</strong> <code>Access-Control-Allow-Origin: *</code> header is present.</li>
+          <li><strong>No Shell Execution on 404:</strong> Errors return non-zero HTTP status codes rather than 200 OK fallback pages.</li>
+          <li><strong>Authoritative Sync:</strong> Installer bodies in <code>dist/</code> strictly match the canonical versions in <code>scripts/</code>.</li>
+        </ul>
+      </section>
+
+      <!-- Section: Rollback -->
+      <section id="rollback" class="docs-section">
+        <h2>Instant Rollback Procedure</h2>
+        <p>If any verification check fails during a migration:</p>
+        <ol>
+          <li>Revert DNS CNAME records back to the prior hosting provider target.</li>
+          <li>Both Vercel and Cloudflare Pages maintain instant deployment rollback in their respective dashboards with a single click.</li>
+          <li>Test endpoints with <code>curl -I</code> to ensure zero broken installation requests.</li>
+        </ol>
+      </section>
+
+      <!-- Pager -->
+      <div class="docs-pager">
+        <a href="/docs" class="pager-link">
+          <span class="pager-label">Previous</span>
+          <span class="pager-title">← Documentation</span>
+        </a>
+        <a href="/install" class="pager-link" style="text-align: right;">
+          <span class="pager-label">Next</span>
+          <span class="pager-title">Installation Portal →</span>
+        </a>
+      </div>
+    </main>
+  </div>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div class="footer-container">
+      <div class="footer-col">
+        <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.75rem;">
+          <img src="/colt-logo.svg" alt="Colt Logo" style="width:24px; height:24px;">
+          <span style="font-weight: 700; color: var(--text-primary);">ColtLang</span>
+        </div>
+        <p style="font-size: 0.85rem; color: var(--text-muted); line-height: 1.6;">
+          One declarative language for every kind of data. Unifying relational, document, key-value, vector, and graph databases.
+        </p>
+      </div>
+      <div class="footer-col">
+        <h4>Documentation</h4>
+        <ul class="footer-links">
+          <li><a href="/docs#introduction">Introduction</a></li>
+          <li><a href="/docs#first-program">First Program</a></li>
+          <li><a href="/docs#colt-run">Execution Engine</a></li>
+          <li><a href="/docs#cli-reference">CLI Reference</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Deployment & Hosting</h4>
+        <ul class="footer-links">
+          <li><a href="/install">Install Guide</a></li>
+          <li><a href="/migration">Vercel & Cloudflare</a></li>
+          <li><a href="/migration#domain-migration">Domain Migration</a></li>
+          <li><a href="/docs#doctor-command">System Health</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Project</h4>
+        <ul class="footer-links">
+          <li><a href="https://github.com/ColtLabs/ColtLang" target="_blank" rel="noopener">GitHub Repository</a></li>
+          <li><a href="https://github.com/ColtLabs/ColtStudio2" target="_blank" rel="noopener">ColtStudio IDE</a></li>
+          <li><a href="https://github.com/ColtLabs/ColtLang/releases" target="_blank" rel="noopener">Releases & Checksums</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <div>&copy; 2026 ColtLang Contributors. Licensed under MIT or Apache-2.0.</div>
+    </div>
+  </footer>
+
+</body>
+</html>

@@ -276,6 +276,18 @@ Colt states consistency guarantees honestly rather than pretending multiple data
 The native `colt` CLI is an ultra-fast, engine-aware, zero-dependency binary written in Rust:
 
 ```bash
+# Launch the interactive Terminal UI (TUI)
+colt
+
+# Execute a whole-file declarative program against ColtaneDB
+colt run library.colt
+
+# Preview execution without executing mutations (zero side-effects)
+colt run library.colt --dry-run
+
+# Run toolchain, environment, and backend readiness diagnostics
+colt doctor
+
 # Check syntax, schema, and capability rules
 colt check library.colt
 
@@ -296,7 +308,24 @@ colt capabilities
 colt version
 ```
 
-### Installation & Building
+### ⚡ One-Command Installation (No Rust Required)
+
+Install prebuilt, SHA-256 verified release binaries directly from the official portal:
+
+- **Windows PowerShell:**
+  ```powershell
+  irm https://coltlang.dev/install.ps1 | iex
+  ```
+- **Windows Command Prompt (CMD):**
+  ```cmd
+  curl -fsSL https://coltlang.dev/install.cmd -o install.cmd && install.cmd && del install.cmd
+  ```
+- **macOS & Linux:**
+  ```bash
+  curl -fsSL https://coltlang.dev/install.sh | sh
+  ```
+
+### Building From Source
 
 ```bash
 # Install native binary directly via Cargo
@@ -322,19 +351,26 @@ ColtLang includes both the Rust-native production toolchain and differential par
 
 ### 1. Rust Native Workspace
 ```bash
-# Run all unit, integration, and fuzz tests across all 8 crates (72 tests)
+# Run all unit, integration, and fuzz tests across all 8 crates (82 tests passing)
 cargo test --workspace
 
 # Build the release toolchain
 cargo build --release -p colt-cli
 ```
 
-### 2. TypeScript Reference & Differential Parity Suite
+### 2. Official Website & Documentation Portal
+```bash
+cd website
+npm run build
+npm test
+```
+
+### 3. TypeScript Reference & Differential Parity Suite
 ```bash
 # Install dependencies
 corepack pnpm install
 
-# Run full parity and conformance test suite (147 tests)
+# Run full parity and conformance test suite (147 tests passing)
 corepack pnpm test
 
 # Run linter and typechecker

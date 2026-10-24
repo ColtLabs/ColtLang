@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Installation Portal — ColtLang Toolchain</title>
+  <meta name="description" content="One-command installation guides for ColtLang on Windows PowerShell, Windows CMD, macOS, and Linux. No Rust or Node.js required.">
+  <link rel="canonical" href="https://coltlang.dev/install">
+  
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://coltlang.dev/install">
+  <meta property="og:title" content="Install ColtLang — Windows, macOS & Linux">
+  <meta property="og:description" content="One-command installation guides for the high-performance Colt native toolchain.">
+  <meta property="og:image" content="/colt-logo.svg">
+
+  <link rel="icon" type="image/svg+xml" href="/colt-logo.svg">
+  <link rel="stylesheet" href="/styles/main.css">
+  <link rel="stylesheet" href="/styles/docs.css">
+  <script defer src="/scripts/app.js"></script>
+
+  <style>
+    .install-hero {
+      text-align: center;
+      padding: 4rem 1.5rem 2.5rem;
+      max-width: 800px;
+      margin: 0 auto;
+    }
+    .platform-tabs {
+      display: flex;
+      justify-content: center;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+      margin-bottom: 2rem;
+    }
+    .platform-tab {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-subtle);
+      color: var(--text-secondary);
+      font-size: 0.95rem;
+      font-weight: 600;
+      padding: 0.75rem 1.25rem;
+      border-radius: var(--radius-md);
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .platform-tab:hover {
+      border-color: var(--border-active);
+      color: var(--text-primary);
+    }
+    .platform-tab.active {
+      background: rgba(224, 122, 95, 0.12);
+      border-color: var(--accent-copper);
+      color: var(--accent-copper);
+    }
+    .platform-panel {
+      display: none;
+      background: var(--bg-surface);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-lg);
+      padding: 2.5rem;
+      box-shadow: var(--shadow-md);
+    }
+    .platform-panel.active {
+      display: block;
+      animation: fadeIn 0.2s ease;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(4px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .install-step-num {
+      width: 28px;
+      height: 28px;
+      background: var(--accent-gradient);
+      color: #0B0E14;
+      font-weight: 700;
+      border-radius: 50%;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.85rem;
+      margin-right: 0.5rem;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Site Navigation -->
+  <header class="site-header">
+    <div class="nav-container">
+      <a href="/" class="brand-link">
+        <img src="/colt-logo.svg" alt="Colt Logo" class="brand-logo">
+        <span>ColtLang</span>
+        <span class="brand-badge">v0.2.0</span>
+      </a>
+
+      <nav>
+        <ul class="nav-links">
+          <li><a href="/" class="nav-link">Home</a></li>
+          <li><a href="/install" class="nav-link active">Install</a></li>
+          <li><a href="/docs" class="nav-link">Documentation</a></li>
+          <li><a href="/migration" class="nav-link">Migration</a></li>
+        </ul>
+      </nav>
+
+      <div class="nav-actions">
+        <button id="theme-toggle" class="theme-toggle-btn" aria-label="Toggle theme">☀</button>
+        <a href="https://github.com/ColtLabs/ColtLang" target="_blank" rel="noopener" class="btn btn-secondary" style="padding: 0.5rem 1rem; font-size: 0.85rem;">
+          GitHub
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <main style="max-width: var(--max-width); margin: 0 auto; padding: 0 1.5rem 5rem;">
+    <div class="install-hero">
+      <div class="hero-pill">Release v0.2.0 &bull; Standalone Native Toolchain</div>
+      <h1 class="hero-title" style="font-size: 3rem;">Install Colt</h1>
+      <p class="hero-subtitle">
+        One command installs the pre-built, checksum-verified native <code>colt</code> executable directly into your user path.
+      </p>
+
+      <div class="platform-tabs">
+        <button class="platform-tab active" data-platform="windows-ps">Windows (PowerShell)</button>
+        <button class="platform-tab" data-platform="windows-cmd">Windows (CMD)</button>
+        <button class="platform-tab" data-platform="macos">macOS</button>
+        <button class="platform-tab" data-platform="linux">Linux</button>
+        <button class="platform-tab" data-platform="source">From Source (Rust)</button>
+      </div>
+    </div>
+
+    <!-- Platform Panels -->
+    <div style="max-width: 860px; margin: 0 auto;">
+
+      <!-- Windows PowerShell Panel -->
+      <div id="panel-windows-ps" class="platform-panel active">
+        <h2 style="font-size: 1.5rem; margin-bottom: 0.5rem;">Windows PowerShell Installation</h2>
+        <p style="color: var(--text-muted); margin-bottom: 1.5rem;">
+          Supported architectures: <code>x86_64</code>. Automatically installs to <code>%LOCALAPPDATA%\Programs\colt\bin</code> and updates user PATH.
+        </p>
+
+        <div style="margin-bottom: 2rem;">
+          <div style="font-weight: 600; margin-bottom: 0.5rem;">Run in PowerShell (Run as regular user, no Admin required):</div>
+          <div class="quick-install-box" style="width: 100%; justify-content: space-between;">
+            <code id="cmd-ps">irm https://coltlang.dev/install.ps1 | iex</code>
+            <button class="copy-btn" data-target="cmd-ps">Copy Command</button>
+          </div>
+        </div>
+
+        <div class="docs-callout docs-callout-note">
+          <div class="callout-title">ℹ What this installer does</div>
+          <ul style="margin: 0.5rem 0 0 1.25rem; font-size: 0.9rem;">
+            <li>Detects operating system architecture (x86_64).</li>
+            <li>Downloads release binary from official GitHub Releases.</li>
+            <li>Verifies SHA-256 integrity against published <code>SHA256SUMS.txt</code> manifest.</li>
+            <li>Idempotently adds install directory to your user <code>PATH</code>.</li>
+            <li>Executes <code>colt version</code> to verify installation.</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Windows CMD Panel -->
+      <div id="panel-windows-cmd" class="platform-panel">
+        <h2 style="font-size: 1.5rem; margin-bottom: 0.5rem;">Windows Command Prompt Installation</h2>
+        <p style="color: var(--text-muted); margin-bottom: 1.5rem;">
+          Native batch installation using curl and tar. Supported on Windows 10 &amp; 11.
+        </p>
+
+        <div style="margin-bottom: 2rem;">
+          <div style="font-weight: 600; margin-bottom: 0.5rem;">Run in Command Prompt (CMD):</div>
+          <div class="quick-install-box" style="width: 100%; justify-content: space-between;">
+            <code id="cmd-cmd">curl -fsSL https://coltlang.dev/install.cmd -o install.cmd &amp;&amp; install.cmd &amp;&amp; del install.cmd</code>
+            <button class="copy-btn" data-target="cmd-cmd">Copy Command</button>
+          </div>
+        </div>
+
+        <p style="font-size: 0.9rem; color: var(--text-muted);">
+          Note: If PowerShell is available on your system, the CMD installer automatically delegates to the PowerShell script for checksum verification and PATH registration.
+        </p>
+      </div>
+
+      <!-- macOS Panel -->
+      <div id="panel-macos" class="platform-panel">
+        <h2 style="font-size: 1.5rem; margin-bottom: 0.5rem;">macOS Installation</h2>
+        <p style="color: var(--text-muted); margin-bottom: 1.5rem;">
+          Universal support for Apple Silicon (M1/M2/M3/M4) and Intel x86_64 processors.
+        </p>
+
+        <div style="margin-bottom: 2rem;">
+          <div style="font-weight: 600; margin-bottom: 0.5rem;">Run in Terminal:</div>
+          <div class="quick-install-box" style="width: 100%; justify-content: space-between;">
+            <code id="cmd-macos">curl -fsSL https://coltlang.dev/install.sh | sh</code>
+            <button class="copy-btn" data-target="cmd-macos">Copy Command</button>
+          </div>
+        </div>
+
+        <div class="docs-callout docs-callout-tip">
+          <div class="callout-title">💡 User-Level Installation</div>
+          <p style="font-size: 0.9rem; margin: 0;">
+            Installs into <code>~/.local/bin/colt</code> without requiring <code>sudo</code> or root permissions. If <code>~/.local/bin</code> is not in your PATH, add <code>export PATH="$HOME/.local/bin:$PATH"</code> to your <code>~/.zshrc</code>.
+          </p>
+        </div>
+      </div>
+
+      <!-- Linux Panel -->
+      <div id="panel-linux" class="platform-panel">
+        <h2 style="font-size: 1.5rem; margin-bottom: 0.5rem;">Linux Installation</h2>
+        <p style="color: var(--text-muted); margin-bottom: 1.5rem;">
+          Self-contained glibc x86_64 executable. Works on Ubuntu, Debian, Fedora, Arch, Alpine, and RHEL.
+        </p>
+
+        <div style="margin-bottom: 2rem;">
+          <div style="font-weight: 600; margin-bottom: 0.5rem;">Run in Shell:</div>
+          <div class="quick-install-box" style="width: 100%; justify-content: space-between;">
+            <code id="cmd-linux">curl -fsSL https://coltlang.dev/install.sh | sh</code>
+            <button class="copy-btn" data-target="cmd-linux">Copy Command</button>
+          </div>
+        </div>
+
+        <p style="font-size: 0.9rem; color: var(--text-muted);">
+          Extracts binary into <code>~/.local/bin/colt</code> and checks SHA-256 checksum with <code>sha256sum</code>.
+        </p>
+      </div>
+
+      <!-- Source Panel -->
+      <div id="panel-source" class="platform-panel">
+        <h2 style="font-size: 1.5rem; margin-bottom: 0.5rem;">Building from Source</h2>
+        <p style="color: var(--text-muted); margin-bottom: 1.5rem;">
+          Build the official native executable directly using the Rust toolchain (Rust 1.80+ required).
+        </p>
+
+        <div style="margin-bottom: 1.5rem;">
+          <div class="code-card">
+            <div class="code-header"><span>Terminal</span><span>bash</span></div>
+            <pre class="code-content"><code><span style="color:#8D99AE;"># 1. Clone repository</span>
+git clone https://github.com/ColtLabs/ColtLang.git
+cd ColtLang
+
+<span style="color:#8D99AE;"># 2. Build optimized release binary</span>
+cargo build --release -p colt-cli
+
+<span style="color:#8D99AE;"># 3. Verify executable</span>
+./target/release/colt version
+./target/release/colt check examples/library.colt</code></pre>
+          </div>
+        </div>
+      </div>
+
+      <!-- Post-Install Verification Section -->
+      <div style="margin-top: 3.5rem;">
+        <h2 style="font-size: 1.75rem; margin-bottom: 1rem;">Post-Installation Verification</h2>
+        <p style="color: var(--text-muted); margin-bottom: 1.5rem;">
+          Run these verified commands to confirm that Colt is installed and ready to execute queries:
+        </p>
+
+        <div class="code-card" style="margin-bottom: 2rem;">
+          <div class="code-header"><span>Verification Workflow</span><span>colt-cli</span></div>
+          <pre class="code-content"><code><span style="color:#8D99AE;"># 1. Check version handshake</span>
+colt version
+
+<span style="color:#8D99AE;"># 2. Inspect environment health and database readiness</span>
+colt doctor
+
+<span style="color:#8D99AE;"># 3. Simulate execution preview without database mutations</span>
+colt run examples/library.colt --dry-run
+
+<span style="color:#8D99AE;"># 4. Launch interactive terminal workspace</span>
+colt</code></pre>
+        </div>
+      </div>
+
+      <!-- Updating & Uninstalling -->
+      <div style="margin-top: 2rem;">
+        <h2 style="font-size: 1.5rem; margin-bottom: 1rem;">Updating &amp; Uninstalling</h2>
+        <div class="grid-3" style="grid-template-columns: 1fr 1fr; gap: 1.5rem;">
+          <div class="card">
+            <h3 class="card-title">Updating to Latest</h3>
+            <p class="card-text">
+              Simply rerun the installation command for your platform. The installer downloads the newest release and replaces the binary safely.
+            </p>
+          </div>
+
+          <div class="card">
+            <h3 class="card-title">Uninstalling</h3>
+            <p class="card-text">
+              Delete the <code>colt</code> executable from your install directory (<code>%LOCALAPPDATA%\Programs\colt\bin</code> on Windows or <code>~/.local/bin/colt</code> on Unix).
+            </p>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- Site Footer -->
+  <footer class="site-footer">
+    <div class="footer-content">
+      <div class="footer-brand">
+        <div style="display:flex; align-items:center; gap:0.5rem;">
+          <img src="/colt-logo.svg" alt="Colt Logo" style="width:24px; height:24px;">
+          <span style="font-weight:700; font-size:1.1rem;">ColtLang</span>
+        </div>
+        <p class="footer-desc">
+          High-performance, declarative, multi-paradigm database language. Built by ColtLabs.
+        </p>
+      </div>
+
+      <div>
+        <h4 class="footer-col-title">Product</h4>
+        <ul class="footer-links">
+          <li><a href="/install">Installation</a></li>
+          <li><a href="/docs">Documentation</a></li>
+          <li><a href="/migration">Hosting Migration</a></li>
+        </ul>
+      </div>
+
+      <div>
+        <h4 class="footer-col-title">Ecosystem</h4>
+        <ul class="footer-links">
+          <li><a href="https://github.com/ColtLabs/ColtLang" target="_blank" rel="noopener">GitHub Repository</a></li>
+          <li><a href="https://github.com/ColtLabs/ColtLang/releases" target="_blank" rel="noopener">Releases &amp; Checksums</a></li>
+        </ul>
+      </div>
+
+      <div>
+        <h4 class="footer-col-title">Legal &amp; Trust</h4>
+        <ul class="footer-links">
+          <li><a href="https://github.com/ColtLabs/ColtLang/blob/main/LICENSE" target="_blank" rel="noopener">Apache-2.0 License</a></li>
+          <li><a href="https://github.com/ColtLabs/ColtLang/blob/main/SECURITY.md" target="_blank" rel="noopener">Security Policy</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <span>&copy; 2026 ColtLabs. Open source under Apache-2.0.</span>
+      <span>ColtLang Toolchain v0.2.0</span>
+    </div>
+  </footer>
+
+</body>
+</html>

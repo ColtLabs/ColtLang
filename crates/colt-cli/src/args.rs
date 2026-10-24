@@ -1,3 +1,5 @@
+use crate::tui;
+
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum CommandName {
     Check,
@@ -6,6 +8,9 @@ pub enum CommandName {
     Parse,
     Capabilities,
     Fmt,
+    Run,
+    Doctor,
+    Interactive,
     Help,
     Version,
 }
@@ -19,6 +24,8 @@ impl CommandName {
             "parse" => Some(Self::Parse),
             "capabilities" => Some(Self::Capabilities),
             "fmt" => Some(Self::Fmt),
+            "run" => Some(Self::Run),
+            "doctor" => Some(Self::Doctor),
             "help" => Some(Self::Help),
             "version" => Some(Self::Version),
             _ => None,
@@ -33,6 +40,9 @@ impl CommandName {
             Self::Parse => "parse",
             Self::Capabilities => "capabilities",
             Self::Fmt => "fmt",
+            Self::Run => "run",
+            Self::Doctor => "doctor",
+            Self::Interactive => "interactive",
             Self::Help => "help",
             Self::Version => "version",
         }
@@ -41,7 +51,7 @@ impl CommandName {
     pub fn takes_source(&self) -> bool {
         matches!(
             self,
-            Self::Check | Self::Plan | Self::Lex | Self::Parse | Self::Fmt
+            Self::Check | Self::Plan | Self::Lex | Self::Parse | Self::Fmt | Self::Run
         )
     }
 }
@@ -54,6 +64,8 @@ pub struct CliOptions {
     pub stdin: bool,
     pub quiet: bool,
     pub check: bool,
+    pub dry_run: bool,
+    pub verbose: bool,
 }
 
 #[derive(Debug)]
@@ -78,6 +90,8 @@ where
     let mut stdin = false;
     let mut quiet = false;
     let mut check = false;
+    let mut dry_run = false;
+    let mut verbose = false;
 
     for arg in args {
         let arg = arg.as_ref();
@@ -86,6 +100,8 @@ where
             "--stdin" => stdin = true,
             "--quiet" => quiet = true,
             "--check" => check = true,
+            "--dry-run" => dry_run = true,
+            "--verbose" | "-v" => verbose = true,
             "--help" | "-h" => command = Some(CommandName::Help),
             "--version" | "-V" => command = Some(CommandName::Version),
             "-" => stdin = true,
@@ -116,6 +132,8 @@ where
             stdin,
             quiet,
             check,
+            dry_run,
+            verbose,
         });
     }
 
@@ -123,7 +141,11 @@ where
         Some(cmd) => cmd,
         None => {
             if file.is_none() && !stdin {
-                CommandName::Help
+                if !json && !quiet && tui::is_interactive_terminal() {
+                    CommandName::Interactive
+                } else {
+                    CommandName::Help
+                }
             } else {
                 CommandName::Check
             }
@@ -137,7 +159,7 @@ where
         )));
     }
 
-    if !final_command.takes_source() && file.is_some() {
+    if !final_command.takes_source() && final_command != CommandName::Interactive && file.is_some() {
         return Err(UsageError(format!(
             "The {} command does not take a source file.",
             final_command.as_str()
@@ -151,5 +173,7 @@ where
         stdin,
         quiet,
         check,
+        dry_run,
+        verbose,
     })
 }

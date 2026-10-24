@@ -1,0 +1,243 @@
+/* website/styles/docs.css - Documentation Experience */
+
+.docs-layout {
+  display: flex;
+  max-width: var(--max-width);
+  margin: 0 auto;
+  min-height: calc(100vh - 65px);
+  width: 100%;
+}
+
+.docs-sidebar {
+  width: 280px;
+  flex-shrink: 0;
+  border-right: 1px solid var(--border-subtle);
+  padding: 2rem 1.5rem;
+  position: sticky;
+  top: 65px;
+  height: calc(100vh - 65px);
+  overflow-y: auto;
+  background: var(--bg-surface);
+}
+
+.docs-search-box {
+  margin-bottom: 1.5rem;
+  position: relative;
+}
+
+.docs-search-input {
+  width: 100%;
+  background: var(--bg-code);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  padding: 0.6rem 0.85rem 0.6rem 2.25rem;
+  color: var(--text-primary);
+  font-family: var(--font-sans);
+  font-size: 0.9rem;
+  outline: none;
+  transition: border-color 0.15s ease;
+}
+
+.docs-search-input:focus {
+  border-color: var(--accent-copper);
+}
+
+.docs-search-icon {
+  position: absolute;
+  left: 0.75rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--text-muted);
+  pointer-events: none;
+}
+
+.docs-nav-group {
+  margin-bottom: 1.75rem;
+}
+
+.docs-nav-title {
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--accent-copper);
+  margin-bottom: 0.65rem;
+}
+
+.docs-nav-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.docs-nav-item a {
+  display: block;
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+  padding: 0.35rem 0.65rem;
+  border-radius: var(--radius-sm);
+  transition: all 0.15s ease;
+}
+
+.docs-nav-item a:hover {
+  color: var(--text-primary);
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.docs-nav-item.active a {
+  color: var(--accent-copper);
+  background: rgba(224, 122, 95, 0.1);
+  font-weight: 600;
+}
+
+.docs-content {
+  flex: 1;
+  padding: 3rem 4rem;
+  max-width: 860px;
+}
+
+@media (max-width: 900px) {
+  .docs-layout {
+    flex-direction: column;
+  }
+  .docs-sidebar {
+    width: 100%;
+    position: static;
+    height: auto;
+    border-right: none;
+    border-bottom: 1px solid var(--border-subtle);
+  }
+  .docs-content {
+    padding: 2rem 1.5rem;
+  }
+}
+
+.breadcrumbs {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  margin-bottom: 1.5rem;
+}
+
+.docs-title {
+  font-size: 2.5rem;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  margin-bottom: 1rem;
+}
+
+.docs-lead {
+  font-size: 1.15rem;
+  color: var(--text-secondary);
+  line-height: 1.7;
+  margin-bottom: 2.5rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.docs-section {
+  margin-bottom: 3rem;
+}
+
+.docs-section h2 {
+  font-size: 1.65rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  margin: 2rem 0 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.docs-section h3 {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin: 1.5rem 0 0.75rem;
+}
+
+.docs-section p {
+  color: var(--text-secondary);
+  line-height: 1.7;
+  margin-bottom: 1rem;
+}
+
+.docs-section ul, .docs-section ol {
+  color: var(--text-secondary);
+  margin: 0 0 1.25rem 1.5rem;
+  line-height: 1.7;
+}
+
+.docs-section li {
+  margin-bottom: 0.35rem;
+}
+
+.docs-callout {
+  padding: 1.25rem 1.5rem;
+  border-radius: var(--radius-md);
+  margin: 1.5rem 0;
+  border-left: 4px solid;
+  background: var(--bg-surface);
+}
+
+.docs-callout-note {
+  border-left-color: var(--color-info);
+  background: rgba(56, 189, 248, 0.05);
+}
+
+.docs-callout-tip {
+  border-left-color: var(--color-success);
+  background: rgba(129, 178, 154, 0.05);
+}
+
+.docs-callout-warning {
+  border-left-color: var(--color-warning);
+  background: rgba(244, 162, 97, 0.05);
+}
+
+.callout-title {
+  font-weight: 700;
+  font-size: 0.9rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.35rem;
+}
+
+.docs-pager {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 4rem;
+  padding-top: 2rem;
+  border-top: 1px solid var(--border-subtle);
+}
+
+.pager-link {
+  display: flex;
+  flex-direction: column;
+  padding: 0.75rem 1.25rem;
+  border-radius: var(--radius-md);
+  background: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  transition: all 0.2s ease;
+  min-width: 180px;
+}
+
+.pager-link:hover {
+  border-color: var(--border-active);
+  transform: translateY(-2px);
+}
+
+.pager-label {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.pager-title {
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-top: 0.25rem;
+}

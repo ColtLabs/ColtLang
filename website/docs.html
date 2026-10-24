@@ -1,0 +1,710 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Documentation — ColtLang Official Reference & Guide</title>
+  <meta name="description" content="Complete official documentation for ColtLang: grammar, multi-paradigm queries, execution runtime, CLI reference, diagnostic codes, and TUI guide.">
+  <link rel="canonical" href="https://coltlang.dev/docs">
+  
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://coltlang.dev/docs">
+  <meta property="og:title" content="ColtLang Documentation — Language, Runtime & CLI">
+  <meta property="og:description" content="Complete documentation and guides for the Colt declarative multi-paradigm data language.">
+  <meta property="og:image" content="/colt-logo.svg">
+
+  <link rel="icon" type="image/svg+xml" href="/colt-logo.svg">
+  <link rel="stylesheet" href="/styles/main.css">
+  <link rel="stylesheet" href="/styles/docs.css">
+  <script defer src="/scripts/app.js"></script>
+
+  <style>
+    .docs-search-results {
+      position: absolute;
+      top: 100%;
+      left: 0;
+      right: 0;
+      background: var(--bg-surface);
+      border: 1px solid var(--border-active);
+      border-radius: var(--radius-md);
+      box-shadow: var(--shadow-lg);
+      max-height: 320px;
+      overflow-y: auto;
+      z-index: 100;
+      display: none;
+    }
+    .docs-search-item {
+      padding: 0.75rem 1rem;
+      border-bottom: 1px solid var(--border-subtle);
+      cursor: pointer;
+      display: block;
+      color: var(--text-primary);
+      text-decoration: none;
+    }
+    .docs-search-item:hover {
+      background: rgba(224, 122, 95, 0.1);
+    }
+    .docs-search-item-title {
+      font-weight: 600;
+      font-size: 0.9rem;
+      color: var(--accent-copper);
+    }
+    .docs-search-item-snippet {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      margin-top: 0.2rem;
+    }
+    .diag-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 1.5rem 0;
+      font-size: 0.9rem;
+    }
+    .diag-table th, .diag-table td {
+      padding: 0.75rem 1rem;
+      text-align: left;
+      border-bottom: 1px solid var(--border-subtle);
+    }
+    .diag-table th {
+      background: var(--bg-surface);
+      color: var(--text-secondary);
+      font-weight: 600;
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    .diag-code {
+      font-family: var(--font-mono);
+      font-weight: 700;
+      color: var(--accent-amber);
+    }
+    .exit-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 1.5rem 0;
+    }
+    .exit-table th, .exit-table td {
+      padding: 0.75rem 1rem;
+      border-bottom: 1px solid var(--border-subtle);
+    }
+    .exit-code {
+      font-family: var(--font-mono);
+      font-weight: 700;
+      color: var(--accent-copper);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Site Navigation -->
+  <header class="site-header">
+    <div class="nav-container">
+      <a href="/" class="brand-link">
+        <img src="/colt-logo.svg" alt="Colt Logo" class="brand-logo">
+        <span>ColtLang</span>
+        <span class="brand-badge">v0.2.0</span>
+      </a>
+
+      <nav>
+        <ul class="nav-links">
+          <li><a href="/" class="nav-link">Home</a></li>
+          <li><a href="/install" class="nav-link">Install</a></li>
+          <li><a href="/docs" class="nav-link active">Documentation</a></li>
+          <li><a href="/migration" class="nav-link">Hosting & Domain</a></li>
+          <li><a href="https://github.com/ColtLabs/ColtLang" target="_blank" rel="noopener" class="nav-link">GitHub ↗</a></li>
+        </ul>
+      </nav>
+
+      <div class="nav-actions">
+        <button id="theme-toggle" class="btn-icon" aria-label="Toggle Theme" title="Toggle theme">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="5"></circle>
+            <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"></path>
+          </svg>
+        </button>
+        <a href="/install" class="btn btn-primary btn-sm">Get Colt</a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Docs Layout -->
+  <div class="docs-layout">
+    
+    <!-- Sidebar Navigation -->
+    <aside class="docs-sidebar">
+      <div class="docs-search-box">
+        <svg class="docs-search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="11" cy="11" r="8"></circle>
+          <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+        </svg>
+        <input type="text" id="docs-search-input" class="docs-search-input" placeholder="Search documentation..." autocomplete="off">
+        <div id="docs-search-results" class="docs-search-results"></div>
+      </div>
+
+      <div class="docs-nav-group">
+        <div class="docs-nav-title">Getting Started</div>
+        <ul class="docs-nav-list">
+          <li class="docs-nav-item active"><a href="#introduction">Introduction</a></li>
+          <li class="docs-nav-item"><a href="#installation">Installation & Verify</a></li>
+          <li class="docs-nav-item"><a href="#first-program">Your First .colt File</a></li>
+        </ul>
+      </div>
+
+      <div class="docs-nav-group">
+        <div class="docs-nav-title">Language Fundamentals</div>
+        <ul class="docs-nav-list">
+          <li class="docs-nav-item"><a href="#connections">Connections & Aliases</a></li>
+          <li class="docs-nav-item"><a href="#collections">Collections & Schemas</a></li>
+          <li class="docs-nav-item"><a href="#queries">Queries & Filters (FIND)</a></li>
+          <li class="docs-nav-item"><a href="#mutations">Mutations (PUT, CREATE, DELETE)</a></li>
+          <li class="docs-nav-item"><a href="#atomic">Transactions (ATOMIC)</a></li>
+        </ul>
+      </div>
+
+      <div class="docs-nav-group">
+        <div class="docs-nav-title">Multi-Paradigm Support</div>
+        <ul class="docs-nav-list">
+          <li class="docs-nav-item"><a href="#relational">Relational Data</a></li>
+          <li class="docs-nav-item"><a href="#document">Document Stores</a></li>
+          <li class="docs-nav-item"><a href="#key-value">Key-Value Stores</a></li>
+          <li class="docs-nav-item"><a href="#vector">Vector Embeddings</a></li>
+          <li class="docs-nav-item"><a href="#graph">Graph Traversals</a></li>
+        </ul>
+      </div>
+
+      <div class="docs-nav-group">
+        <div class="docs-nav-title">Execution Engine</div>
+        <ul class="docs-nav-list">
+          <li class="docs-nav-item"><a href="#colt-run">Executing with colt run</a></li>
+          <li class="docs-nav-item"><a href="#dry-run">Dry-Run Preview</a></li>
+          <li class="docs-nav-item"><a href="#output-modes">JSON & Verbose Modes</a></li>
+          <li class="docs-nav-item"><a href="#exit-codes">Exit Codes & Protocols</a></li>
+        </ul>
+      </div>
+
+      <div class="docs-nav-group">
+        <div class="docs-nav-title">Interactive TUI</div>
+        <ul class="docs-nav-list">
+          <li class="docs-nav-item"><a href="#tui-overview">Interactive Workspace</a></li>
+          <li class="docs-nav-item"><a href="#tui-commands">In-TUI Commands</a></li>
+          <li class="docs-nav-item"><a href="#tui-themes">Themes & NO_COLOR</a></li>
+        </ul>
+      </div>
+
+      <div class="docs-nav-group">
+        <div class="docs-nav-title">Diagnostics & Reference</div>
+        <ul class="docs-nav-list">
+          <li class="docs-nav-item"><a href="#cli-reference">CLI Command Reference</a></li>
+          <li class="docs-nav-item"><a href="#doctor-command">colt doctor</a></li>
+          <li class="docs-nav-item"><a href="#diagnostics">Diagnostic Codes</a></li>
+        </ul>
+      </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="docs-content">
+      <div class="breadcrumbs">
+        <a href="/">ColtLang</a>
+        <span>/</span>
+        <span>Documentation</span>
+        <span>/</span>
+        <span id="current-crumb">Reference Manual</span>
+      </div>
+
+      <h1 class="docs-title">ColtLang Documentation</h1>
+      <p class="docs-lead">
+        Colt is a declarative, multi-paradigm query and data language. It provides a single, high-performance compiler, execution runtime, and CLI for coordinating relational tables, nested documents, key-value stores, vector embeddings, and graph structures.
+      </p>
+
+      <!-- Section: Introduction -->
+      <section id="introduction" class="docs-section">
+        <h2>Introduction</h2>
+        <p>
+          Modern applications frequently interact with heterogeneous database engines: PostgreSQL for relational tables, MongoDB for document payloads, Redis for caching, Pinecone/Milvus for vector search, and Neo4j for graph relationships.
+        </p>
+        <p>
+          <strong>ColtLang</strong> replaces brittle, multi-driver glue code with a clean, strongly-validated declarative language. A <code>.colt</code> program specifies:
+        </p>
+        <ul>
+          <li><strong>Connections:</strong> Authenticated data endpoints with aliases and credentials loaded safely from environment variables.</li>
+          <li><strong>Collections:</strong> Typed schema structures and data abstractions across heterogeneous engines.</li>
+          <li><strong>Operations:</strong> Declarative reads (<code>FIND</code>), writes (<code>PUT</code>, <code>CREATE</code>), deletions (<code>DELETE</code>), and atomic blocks (<code>ATOMIC</code>).</li>
+        </ul>
+
+        <div class="docs-callout docs-callout-note">
+          <div class="callout-title">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+            Declarative, Not Imperative
+          </div>
+          Colt is not a general-purpose programming language. It contains no unbounded loops, arbitrary memory allocations, or unsafe I/O. Every <code>.colt</code> file is parsed, checked against backend capabilities, compiled into an execution plan (CPA), and orchestrated predictably.
+        </div>
+      </section>
+
+      <!-- Section: Installation -->
+      <section id="installation" class="docs-section">
+        <h2>Installation & Verification</h2>
+        <p>
+          Colt distributes native, precompiled binaries for Windows (x86_64), macOS (Apple Silicon & Intel), and Linux (x86_64). You do not need to install Rust or Node.js to use Colt.
+        </p>
+        
+        <h3>One-Command Installation</h3>
+        <p>Run the platform installer from your terminal:</p>
+        
+        <div class="terminal-card" style="margin-bottom: 1.5rem;">
+          <div class="terminal-body" style="padding: 1.25rem;">
+            <div style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 0.5rem;">Windows PowerShell:</div>
+            <pre class="terminal-output" style="color: var(--accent-copper); font-weight: 600;">irm https://coltlang.dev/install.ps1 | iex</pre>
+            <div style="font-size: 0.8rem; color: var(--text-muted); margin: 0.75rem 0 0.5rem;">macOS / Linux:</div>
+            <pre class="terminal-output" style="color: var(--accent-copper); font-weight: 600;">curl -fsSL https://coltlang.dev/install.sh | sh</pre>
+          </div>
+        </div>
+
+        <h3>Verify Installation</h3>
+        <p>Check that the binary is available in your PATH:</p>
+        <pre class="terminal-output" style="background: var(--bg-surface); border: 1px solid var(--border-subtle); padding: 1rem; border-radius: var(--radius-md);"><code>$ colt --version
+colt 0.2.0
+
+$ colt doctor
+[COLT DOCTOR] Toolchain & Environment Diagnostics
+  CLI Version:       colt 0.2.0 (Rust native)
+  Working Directory: E:\Projects\ColtLang
+  Database Engine:   COLTANE_URI configured (http://localhost:8080)
+  Backend Status:    Available and healthy
+  All systems operational.</code></pre>
+      </section>
+
+      <!-- Section: First Program -->
+      <section id="first-program" class="docs-section">
+        <h2>Your First .colt File</h2>
+        <p>Create a file named <code>library.colt</code> in your project directory:</p>
+
+        <div class="terminal-card">
+          <div class="terminal-header">
+            <span class="terminal-title">library.colt</span>
+          </div>
+          <div class="terminal-body">
+            <pre class="terminal-output" style="color: var(--text-primary);"><span style="color: var(--accent-copper); font-weight: 700;">connection</span> main <span style="color: var(--accent-amber);">"postgres://localhost:5432/app"</span>
+
+<span style="color: var(--accent-copper); font-weight: 700;">collection</span> Books {
+  id: <span style="color: #38BDF8;">string</span>,
+  title: <span style="color: #38BDF8;">string</span>,
+  author: <span style="color: #38BDF8;">string</span>,
+  year: <span style="color: #38BDF8;">int</span>,
+  available: <span style="color: #38BDF8;">bool</span>
+}
+
+<span style="color: var(--accent-copper); font-weight: 700;">FIND</span> Books <span style="color: var(--accent-copper); font-weight: 700;">WHERE</span> available == <span style="color: #81B29A;">true</span>
+<span style="color: var(--accent-copper); font-weight: 700;">PUT</span> Books {
+  id: <span style="color: var(--accent-amber);">"b-101"</span>,
+  title: <span style="color: var(--accent-amber);">"Distributed Systems Design"</span>,
+  author: <span style="color: var(--accent-amber);">"B. Stone"</span>,
+  year: <span style="color: #F4A261;">2024</span>,
+  available: <span style="color: #81B29A;">true</span>
+}</pre>
+          </div>
+        </div>
+
+        <h3>Previewing with Dry-Run</h3>
+        <p>Before executing any mutations against a live database, validate the operations with <code>--dry-run</code>:</p>
+        <pre class="terminal-output" style="background: var(--bg-surface); border: 1px solid var(--border-subtle); padding: 1rem; border-radius: var(--radius-md);"><code>$ colt run library.colt --dry-run
+======================================================================
+  COLT EXECUTION PREVIEW (DRY-RUN)
+  File: library.colt
+  Mode: Validation and capability simulation only (Zero mutations)
+======================================================================
+[PREVIEW] Validated 2 operations across 1 collection:
+  [1] FIND Books (Filter: available == true) -> Read operation
+  [2] PUT Books (Payload: 5 fields) -> Mutation operation
+[SUCCESS] Dry-run complete. 0 operations executed. Source is valid.</code></pre>
+      </section>
+
+      <!-- Section: Connections -->
+      <section id="connections" class="docs-section">
+        <h2>Connections & Aliases</h2>
+        <p>
+          Connections define upstream storage targets. You can specify a direct URI or reference an environment variable for safe credential management:
+        </p>
+        <pre class="terminal-output" style="background: var(--bg-surface); border: 1px solid var(--border-subtle); padding: 1rem; border-radius: var(--radius-md);"><code>// Named connection aliases
+connection primary "postgres://user:pass@localhost:5432/primary_db"
+connection docStore "mongodb://localhost:27017/analytics"
+connection cache "redis://localhost:6379/0"
+
+// Using environment variables (recommended)
+connection secureVault env("DATABASE_URL")</code></pre>
+
+        <div class="docs-callout docs-callout-warning">
+          <div class="callout-title">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+            Credential Redaction Guarantee
+          </div>
+          The Colt CLI and runtime automatically sanitize sensitive URIs in terminal logs, JSON reports, and error messages. Passwords and API tokens are never leaked to stdout.
+        </div>
+      </section>
+
+      <!-- Section: Collections -->
+      <section id="collections" class="docs-section">
+        <h2>Collections & Schemas</h2>
+        <p>
+          Collections map to tables, collections, buckets, or indices depending on the target backend:
+        </p>
+        <pre class="terminal-output" style="background: var(--bg-surface); border: 1px solid var(--border-subtle); padding: 1rem; border-radius: var(--radius-md);"><code>collection Users {
+  id: string,
+  email: string,
+  role: string,
+  metadata: object,
+  tags: [string]
+}</code></pre>
+        <p>Supported primitive field types include:</p>
+        <ul>
+          <li><code>string</code>: UTF-8 character string</li>
+          <li><code>int</code>: 64-bit signed integer</li>
+          <li><code>float</code>: 64-bit IEEE 754 floating point</li>
+          <li><code>bool</code>: Boolean (<code>true</code> / <code>false</code>)</li>
+          <li><code>object</code>: Nested JSON key-value document</li>
+          <li><code>[T]</code>: Array of homogeneous or structured elements</li>
+        </ul>
+      </section>
+
+      <!-- Section: Queries & Mutations -->
+      <section id="queries" class="docs-section">
+        <h2>Queries (FIND)</h2>
+        <p>The <code>FIND</code> statement reads records from a collection:</p>
+        <pre class="terminal-output" style="background: var(--bg-surface); border: 1px solid var(--border-subtle); padding: 1rem; border-radius: var(--radius-md);"><code>// Simple query
+FIND Users
+
+// Filtered query with comparison operators
+FIND Users WHERE role == "admin" && age >= 21
+
+// Projection and sorting
+FIND Users SELECT id, email WHERE active == true ORDER BY email ASC LIMIT 50</code></pre>
+      </section>
+
+      <section id="mutations" class="docs-section">
+        <h2>Mutations (PUT, CREATE, DELETE)</h2>
+        <p>Colt provides explicit declarative statements for data modification:</p>
+        <pre class="terminal-output" style="background: var(--bg-surface); border: 1px solid var(--border-subtle); padding: 1rem; border-radius: var(--radius-md);"><code>// PUT: Inserts or updates (upserts) by primary key
+PUT Users {
+  id: "u-99",
+  email: "alex@example.com",
+  role: "engineer"
+}
+
+// CREATE: Explicit insert with unique constraint validation
+CREATE Users {
+  id: "u-100",
+  email: "sarah@example.com",
+  role: "lead"
+}
+
+// DELETE: Removes matching records
+DELETE Users WHERE id == "u-99"</code></pre>
+      </section>
+
+      <section id="atomic" class="docs-section">
+        <h2>Atomic Transactions (ATOMIC)</h2>
+        <p>
+          Wrap multi-statement writes in an <code>ATOMIC</code> block when the target backend supports transactional guarantees:
+        </p>
+        <pre class="terminal-output" style="background: var(--bg-surface); border: 1px solid var(--border-subtle); padding: 1rem; border-radius: var(--radius-md);"><code>ATOMIC {
+  PUT Accounts { id: "acc-1", balance: balance - 100 }
+  PUT Accounts { id: "acc-2", balance: balance + 100 }
+  CREATE AuditLog { event: "transfer", amount: 100, timestamp: 1714000000 }
+}</code></pre>
+      </section>
+
+      <!-- Section: Multi-Paradigm Support -->
+      <section id="relational" class="docs-section">
+        <h2>Relational Data Handling</h2>
+        <p>
+          Relational results are rendered as structured ASCII tables with aligned columns, headers, and record counts.
+        </p>
+        <pre class="terminal-output" style="background: var(--bg-surface); border: 1px solid var(--border-subtle); padding: 1rem; border-radius: var(--radius-md);"><code>+-------+-----------------------------+-----------+--------+
+| id    | title                       | author    | year   |
++-------+-----------------------------+-----------+--------+
+| b-101 | Distributed Systems Design  | B. Stone  | 2024   |
+| b-102 | Database Internals          | A. Petrov | 2019   |
++-------+-----------------------------+-----------+--------+
+2 records returned (14ms)</code></pre>
+      </section>
+
+      <section id="document" class="docs-section">
+        <h2>Document Stores</h2>
+        <p>
+          For MongoDB and document backends, nested properties, embedded lists, and dynamic objects are preserved in syntax-highlighted tree format.
+        </p>
+      </section>
+
+      <section id="key-value" class="docs-section">
+        <h2>Key-Value Stores</h2>
+        <p>
+          Fast key-value operations (Redis, Memcached) display TTL, key presence, mutation status, and structured key inspection cards.
+        </p>
+      </section>
+
+      <section id="vector" class="docs-section">
+        <h2>Vector Embeddings</h2>
+        <p>
+          Similarity search outputs show nearest neighbors ranked by cosine similarity or euclidean distance, preserving actual match scores:
+        </p>
+        <pre class="terminal-output" style="background: var(--bg-surface); border: 1px solid var(--border-subtle); padding: 1rem; border-radius: var(--radius-md);"><code>+------+-----------------------------+------------+
+| Rank | Document Chunk              | Similarity |
++------+-----------------------------+------------+
+| 1    | "Colt compiler parses AST"  | 0.9421     |
+| 2    | "Query planning with CPA"   | 0.8875     |
++------+-----------------------------+------------+</code></pre>
+      </section>
+
+      <section id="graph" class="docs-section">
+        <h2>Graph Traversals</h2>
+        <p>
+          Graph queries render node-edge-node traversals, hop distances, and relationship properties cleanly.
+        </p>
+      </section>
+
+      <!-- Section: Execution Engine -->
+      <section id="colt-run" class="docs-section">
+        <h2>Executing with colt run</h2>
+        <p>
+          The <code>colt run</code> command processes source through the complete compiler and execution pipeline:
+        </p>
+        <ol>
+          <li><strong>Parse:</strong> Validates lexical tokens and grammar against the Colt language specification.</li>
+          <li><strong>Semantic Check:</strong> Verifies field types, connection targets, and operation constraints.</li>
+          <li><strong>Capability Check:</strong> Ensures requested operations are supported by target storage adapters.</li>
+          <li><strong>Plan Generation:</strong> Assembles a Colt Plan Assembly (CPA).</li>
+          <li><strong>Execution Orchestration:</strong> Dispatches statements to ColtaneDB (<code>POST /api/v1/query</code>) or verified native adapters.</li>
+          <li><strong>Presentation:</strong> Renders paradigm-specific outputs or machine-readable JSON.</li>
+        </ol>
+
+        <div class="docs-callout docs-callout-warning">
+          <div class="callout-title">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+            No Fake Execution Fallback
+          </div>
+          If ColtaneDB or the required storage engine is unreachable, <code>colt run</code> terminates with exit code <code>2</code> and an actionable diagnostic message. It <strong>never</strong> silently downgrades to plan-only mode or fabricates successful execution.
+        </div>
+      </section>
+
+      <section id="dry-run" class="docs-section">
+        <h2>Dry-Run Mode (--dry-run)</h2>
+        <p>
+          Run any <code>.colt</code> file with <code>--dry-run</code> to simulate execution without executing any database mutations. Dry-run performs full lexical analysis, parsing, semantic verification, and planning, then outputs a preview of what would be executed.
+        </p>
+      </section>
+
+      <section id="output-modes" class="docs-section">
+        <h2>Output Modes (--json, --verbose, --quiet)</h2>
+        <p>Colt supports scriptable and pipeline-friendly output options:</p>
+        <ul>
+          <li><code>--json</code>: Outputs pure JSON to stdout. Spinners, banners, and ANSI color codes are stripped automatically.</li>
+          <li><code>--verbose</code>: Prints per-statement execution times, memory buffers, and engine metadata.</li>
+          <li><code>--quiet</code>: Suppresses decorative headers and banner text.</li>
+        </ul>
+      </section>
+
+      <section id="exit-codes" class="docs-section">
+        <h2>Exit Codes</h2>
+        <table class="exit-table">
+          <thead>
+            <tr>
+              <th>Exit Code</th>
+              <th>Status</th>
+              <th>Meaning</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="exit-code">0</td>
+              <td>SUCCESS</td>
+              <td>Command executed successfully, or validation passed with zero errors.</td>
+            </tr>
+            <tr>
+              <td class="exit-code">1</td>
+              <td>COMPILATION_ERROR</td>
+              <td>Lexical, syntax, or semantic validation failed. Source is invalid.</td>
+            </tr>
+            <tr>
+              <td class="exit-code">2</td>
+              <td>RUNTIME_ERROR</td>
+              <td>Database engine unreachable, execution timeout, or transaction failure.</td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+
+      <!-- Section: Interactive TUI -->
+      <section id="tui-overview" class="docs-section">
+        <h2>Interactive Terminal UI (TUI)</h2>
+        <p>
+          Running <code>colt</code> without arguments in an interactive terminal opens the full-screen terminal workspace.
+        </p>
+        <p>
+          Built natively in Rust using ANSI virtual terminal processing, the Colt TUI features a distinctive copper-accented aesthetic inspired by modern AI developer tools.
+        </p>
+      </section>
+
+      <section id="tui-commands" class="docs-section">
+        <h2>In-TUI Commands</h2>
+        <p>Inside the interactive session, use slash commands to inspect and run code:</p>
+        <ul>
+          <li><code>/run &lt;file.colt&gt;</code>: Execute a source file interactively.</li>
+          <li><code>/check &lt;file.colt&gt;</code>: Validate syntax and semantics.</li>
+          <li><code>/plan &lt;file.colt&gt;</code>: Generate and display execution plan.</li>
+          <li><code>/doctor</code>: Run comprehensive toolchain diagnostics.</li>
+          <li><code>/capabilities</code>: View supported paradigm matrix.</li>
+          <li><code>/theme [dark|copper|light|mono]</code>: Switch terminal color palette.</li>
+          <li><code>/history</code>: View previously executed commands.</li>
+          <li><code>/clear</code>: Reset the terminal output buffer.</li>
+          <li><code>/help</code>: Display in-terminal command cheat sheet.</li>
+          <li><code>/exit</code> (or <code>Ctrl+C</code> / <code>Ctrl+D</code>): Exit workspace.</li>
+        </ul>
+      </section>
+
+      <section id="tui-themes" class="docs-themes">
+        <h2>Themes & NO_COLOR Standard</h2>
+        <p>
+          Colt strictly honors the <a href="https://no-color.org/" target="_blank" rel="noopener">NO_COLOR</a> specification. When the <code>NO_COLOR</code> environment variable is set or <code>TERM=dumb</code> is detected, all ANSI color codes and styles are omitted.
+        </p>
+      </section>
+
+      <!-- Section: CLI Reference -->
+      <section id="cli-reference" class="docs-section">
+        <h2>CLI Command Reference</h2>
+        <pre class="terminal-output" style="background: var(--bg-surface); border: 1px solid var(--border-subtle); padding: 1.25rem; border-radius: var(--radius-md);"><code>colt run &lt;file.colt&gt; [--dry-run] [--json] [--verbose] [--quiet]
+colt doctor [--json]
+colt check &lt;file.colt&gt; [--json]
+colt plan &lt;file.colt&gt; [--json]
+colt fmt &lt;file.colt&gt; [--check]
+colt parse &lt;file.colt&gt; [--json]
+colt lex &lt;file.colt&gt; [--json]
+colt capabilities [--json]
+colt --help
+colt --version</code></pre>
+      </section>
+
+      <section id="doctor-command" class="docs-section">
+        <h2>colt doctor</h2>
+        <p>
+          <code>colt doctor</code> is a non-destructive read-only diagnostic utility that audits:
+        </p>
+        <ul>
+          <li>Native CLI version and build target</li>
+          <li>Current working directory and active <code>.colt</code> files</li>
+          <li>Environment configuration (with redacted credentials)</li>
+          <li>ColtaneDB execution engine connectivity (<code>http://localhost:8080/health</code>)</li>
+        </ul>
+      </section>
+
+      <!-- Section: Diagnostic Codes -->
+      <section id="diagnostics" class="docs-section">
+        <h2>Compiler Diagnostic Codes</h2>
+        <p>Colt uses stable, structured diagnostic codes across compiler, CLI, and language server:</p>
+        
+        <table class="diag-table">
+          <thead>
+            <tr>
+              <th>Code</th>
+              <th>Category</th>
+              <th>Description</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="diag-code">COLT1001</td>
+              <td>Syntax</td>
+              <td>Unexpected token or missing punctuation.</td>
+            </tr>
+            <tr>
+              <td class="diag-code">COLT1002</td>
+              <td>Syntax</td>
+              <td>Unclosed string literal or invalid escape sequence.</td>
+            </tr>
+            <tr>
+              <td class="diag-code">COLT1005</td>
+              <td>Syntax</td>
+              <td>Missing collection identifier or empty body.</td>
+            </tr>
+            <tr>
+              <td class="diag-code">COLT2001</td>
+              <td>Semantic</td>
+              <td>Undefined collection referenced in query or mutation.</td>
+            </tr>
+            <tr>
+              <td class="diag-code">COLT2004</td>
+              <td>Semantic</td>
+              <td>Type mismatch in field assignment or comparison.</td>
+            </tr>
+            <tr>
+              <td class="diag-code">COLT2012</td>
+              <td>Capability</td>
+              <td>Requested operation (e.g., vector search) unsupported by target backend.</td>
+            </tr>
+            <tr>
+              <td class="diag-code">COLT2027</td>
+              <td>Semantic</td>
+              <td>Invalid atomic block boundary or uncommitted nested transaction.</td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+
+      <!-- Pager -->
+      <div class="docs-pager">
+        <a href="/install" class="pager-link">
+          <span class="pager-label">Previous</span>
+          <span class="pager-title">← Installation Portal</span>
+        </a>
+        <a href="/migration" class="pager-link" style="text-align: right;">
+          <span class="pager-label">Next</span>
+          <span class="pager-title">Hosting & Domain Migration →</span>
+        </a>
+      </div>
+    </main>
+  </div>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div class="footer-container">
+      <div class="footer-col">
+        <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.75rem;">
+          <img src="/colt-logo.svg" alt="Colt Logo" style="width:24px; height:24px;">
+          <span style="font-weight: 700; color: var(--text-primary);">ColtLang</span>
+        </div>
+        <p style="font-size: 0.85rem; color: var(--text-muted); line-height: 1.6;">
+          One declarative language for every kind of data. Unifying relational, document, key-value, vector, and graph databases.
+        </p>
+      </div>
+      <div class="footer-col">
+        <h4>Documentation</h4>
+        <ul class="footer-links">
+          <li><a href="/docs#introduction">Introduction</a></li>
+          <li><a href="/docs#first-program">First Program</a></li>
+          <li><a href="/docs#colt-run">Execution Engine</a></li>
+          <li><a href="/docs#cli-reference">CLI Reference</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Deployment & Hosting</h4>
+        <ul class="footer-links">
+          <li><a href="/install">Install Guide</a></li>
+          <li><a href="/migration">Vercel & Cloudflare</a></li>
+          <li><a href="/migration#domain">Domain Migration</a></li>
+          <li><a href="/docs#doctor-command">System Health</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Project</h4>
+        <ul class="footer-links">
+          <li><a href="https://github.com/ColtLabs/ColtLang" target="_blank" rel="noopener">GitHub Repository</a></li>
+          <li><a href="https://github.com/ColtLabs/ColtStudio2" target="_blank" rel="noopener">ColtStudio IDE</a></li>
+          <li><a href="https://github.com/ColtLabs/ColtLang/releases" target="_blank" rel="noopener">Releases & Checksums</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <div>&copy; 2026 ColtLang Contributors. Licensed under MIT or Apache-2.0.</div>
+    </div>
+  </footer>
+
+</body>
+</html>

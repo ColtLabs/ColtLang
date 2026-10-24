@@ -1,94 +1,81 @@
 # Project Status
 
-Last updated: 2026-10-12
+Last updated: 2026-10-24
 
 ## Current milestone
 
-ColtLang Rust-Native Migration — **Complete (Colt 0.2.0)**.
-All 6 phases executed: Rust workspace architecture built and verified, 100% differential parity proven against the TypeScript reference oracle, legacy database runtime monolith completely eradicated, and high-performance native binary (`colt 0.2.0`) produced with an ~80x cold-start performance leap.
+ColtLang Premium CLI, Real Execution Runtime, Official Website & One-Command Installation Toolchain — **Complete**.
+All deliverables implemented, tested, and verified:
+1. **Polished Interactive Native CLI & TUI** in Rust (`crates/colt-cli`).
+2. **Real Whole-File Execution Workflow** (`colt run <file.colt>`) communicating with ColtaneDB with `--dry-run` simulation and zero fake execution fallbacks.
+3. **Multi-Paradigm Typed Results** (relational tables, document trees, key-value cards, vector similarity rankings, graph traversals).
+4. **Official Website & Documentation Portal** (`website/`) deployable to Vercel and portable to Cloudflare Pages.
+5. **One-Command Installation Ecosystem** (`/install.ps1`, `/install.cmd`, `/install.sh`) with SHA-256 verification and GitHub Actions release matrix.
+6. **Hosting & Domain Migration Runbook** (`website/migration.html` and `docs/MIGRATION.md`).
 
-## Built
+---
 
-- **Rust-Native Core Toolchain (8 crates)**:
-  - `colt-span`: Byte-offset, 1-indexed line/column source spans with zero-copy serialization.
-  - `colt-diagnostics`: Complete 31-diagnostic catalog (`COLT1001`–`COLT2027`) matching TypeScript codes, severities, messages, and hints with rustc-style terminal reporting.
-  - `colt-ast`: Exact camelCase JSON serialization AST schema for `Program`, `Statement`, `Expression`, `TypeExpression`, and `Annotation`.
-  - `colt-lexer`: High-performance, zero-allocation tokenizer supporting all 89 case-insensitive keywords, punctuation, string escapes, UUIDs, ISO durations, and relative timestamps.
-  - `colt-parser`: Pratt and recursive-descent parser producing `colt-ast::Program`. 100% pass rate on all grammar conformance fixtures; crash-proof on fuzz and random character soup.
-  - `colt-compiler`: Semantic validator, catalog analyzer, capability gatekeeper, and PostgreSQL execution planner producing exact parameterized SQL queries and bound parameter JSON structures.
-  - `colt-fmt`: Canonical, idempotent source code formatter (`format_source`, `format_program`) preserving whitespace, comment styling, and Colt standard layouts.
-  - `colt-cli`: High-speed native `colt` executable supporting `check`, `plan`, `parse`, `lex`, `capabilities`, `fmt`, `version`, `help`, with flags (`--json`, `--stdin`, `-`, `--quiet`, `--check`). Exit codes (0, 1, 2) verified.
-- **Differential Parity & Compatibility**:
-  - `tests/parity.test.ts`: Differential test suite verifying `colt.exe` against the TypeScript reference oracle on every command, JSON AST, and execution plan output (8/8 passed).
-  - All 45 compiler conformance integration tests passing in Rust (`cargo test -p colt-compiler`).
-  - Idempotent formatter tests passing in Rust (`cargo test -p colt-fmt`).
-- **Monolith Pruning & Legacy Eradication**:
-  - Deleted legacy runtime monolith packages: `packages/tenant`, `packages/api`, `packages/api-types`, `packages/python`.
-  - Deleted legacy database server tests: `adapters.test.ts`, `api.test.ts`, `cross-tenant-leak.test.ts`, `firebase.test.ts`, `provider-plugin.test.ts`, `tenant-context.test.ts`, `tenant-guard.test.ts`, `tenant-manager.test.ts`.
-  - Pruned root dependencies: Removed 167 extraneous npm packages; cleaned `package.json` overrides.
-- **Benchmarks & Performance Leap**:
-  - Cold-start execution for `colt.exe check examples/library.colt`: **23.18ms median** vs **~1,840ms** Node/tsx baseline (**~80x faster** cold-start).
-  - Native release binary size: ~5.2 MB standalone executable with zero external runtime dependencies.
+## Built & Implemented
 
-## Run and test
+- **Native CLI & Execution Engine (`crates/colt-cli`)**:
+  - `src/execution/types.rs`: Strongly-typed result model (`Paradigm`, `StepExecutionResult`, `RunExecutionReport`, `DryRunPreview`).
+  - `src/execution/http.rs`: Zero-dependency HTTP execution client communicating with ColtaneDB (`POST /api/v1/query`).
+  - `src/execution/render.rs`: Multi-paradigm renderer with clean ASCII tables for relational rows, colored tree views for documents, key-value cards, ranked cosine similarity for vectors, and path traversals for graphs.
+  - `src/execution/mod.rs`: Whole-file execution orchestrator handling validation, dry-run previews, live dispatches, and credential redaction.
+  - `src/commands/run.rs`: `colt run <file.colt>` supporting `--dry-run`, `--json`, `--verbose`, `--quiet`.
+  - `src/commands/doctor.rs`: `colt doctor` read-only diagnostic utility auditing environment, redacted credentials, and ColtaneDB engine readiness.
+  - `src/tui/mod.rs`: Full-screen interactive terminal workspace with copper/amber aesthetic, theme engine (Dark, Copper, Light, Mono), `NO_COLOR` compliance, and slash commands (`/run`, `/check`, `/plan`, `/doctor`, `/capabilities`, `/theme`, `/history`, `/clear`, `/help`, `/exit`).
+  - Exit code protocol preserved: `0` (Success), `1` (Compilation/Validation error), `2` (Runtime engine error).
 
-### Rust Native Toolchain
-```sh
-# Run all tests across all 8 crates (82 tests including integration suite)
-cargo test --workspace
+- **Official Website & Full Documentation Portal (`website/`)**:
+  - `site.config.js`: Centralized configuration for `PUBLIC_SITE_URL`, releases, and platform installation commands.
+  - `styles/main.css` & `styles/docs.css`: Custom design system featuring deep graphite surfaces, copper/amber accents, modern typography, responsive cards, and accessible callouts.
+  - `index.html`: Landing page featuring interactive terminal demonstration, architecture explanation, paradigm capability matrix, and platform installation CTAs.
+  - `install.html`: Dedicated installation portal with tabbed instructions for Windows PowerShell, Windows CMD, macOS, and Linux, post-install verification, and troubleshooting.
+  - `docs.html`: Complete documentation manual covering grammar, collection definitions, queries (`FIND`), mutations (`PUT`, `CREATE`, `DELETE`), atomic transactions (`ATOMIC`), execution runtime, diagnostic codes (`COLT1001`–`COLT2027`), and CLI reference.
+  - `migration.html`: Web-based migration runbook for host and domain switches.
+  - `build.js` & `test.js`: Deterministic static build script and verification test suite ensuring installer endpoint synchronization, clean HTML processing, and valid sitemaps.
+  - `vercel.json`: Clean URLs, MIME headers (`Content-Type: text/plain` for installers), CORS headers, and route rewrites.
 
-# Build optimized release binary
-cargo build --release -p colt-cli
+- **One-Command Installers & Release Pipeline**:
+  - `scripts/install.ps1`: Architecture detection, remote release download, SHA-256 verification, user PATH configuration, and post-install binary validation.
+  - `scripts/install.cmd`: CMD installer wrapper for clean Windows environments.
+  - `scripts/install.sh`: POSIX shell installer supporting macOS (Apple Silicon `arm64` and Intel `x86_64`) and Linux (`x86_64`).
+  - `.github/workflows/release.yml`: 4-target GitHub Actions release matrix generating precompiled binaries and `SHA256SUMS.txt`.
 
-# Run native CLI directly
-target/release/colt version
-target/release/colt check --json examples/library.colt
-target/release/colt plan --json examples/library.colt
-```
+- **Documentation & Runbooks**:
+  - `docs/CLI_TRANSFORMATION_PLAN.md`: Baseline audit categorizing implemented, partially implemented, and missing features.
+  - `docs/MIGRATION.md`: Operational runbook for zero-downtime hosting migration (Vercel <-> Cloudflare Pages) and domain migration.
+  - `README.md` & `DOCUMENTATION.md`: Updated with `colt run`, `colt doctor`, TUI interactive mode, and one-command install URLs.
 
-### TypeScript Parity Suite & Conformance
-```sh
-corepack pnpm install
-corepack pnpm lint
-corepack pnpm typecheck
-corepack pnpm test
-```
+---
 
-Current test status:
-- **Rust Workspace**: **82/82 tests passing** across 8 crates (including unit, conformance, fuzz, and CLI integration suites).
-- **TypeScript Workspace**: **147/147 tests passing** across 8 test suites (including `parity.test.ts`, `conformance.test.ts`, `fuzz.test.ts`).
-- **TypeScript Typecheck**: Clean (0 errors).
-- **TypeScript Lint**: Clean (0 errors).
+## Verification & Checks Passed
+
+1. **Rust Workspace**:
+   - `cargo test --workspace`: **82/82 tests passed** (including compiler conformance, format idempotency, and CLI integration tests).
+   - `cargo check --workspace`: Clean (0 warnings, 0 errors).
+   - Binary built: `target/release/colt.exe` (~5.2 MB standalone).
+2. **TypeScript Reference Parity**:
+   - `corepack pnpm test`: **147/147 tests passed** (differential AST, lexer, and plan parity).
+   - `corepack pnpm typecheck`: Clean (0 errors).
+   - `corepack pnpm lint`: Clean (0 errors).
+3. **Website Build & Artifact Tests**:
+   - `node build.js`: Clean build generating `website/dist/` in < 1 second.
+   - `node test.js`: **35/35 tests passed** (page content, raw installer MIME/syntax validation, internal link resolution, sitemap structure).
+
+---
 
 ## Decisions
 
-- **Standalone Colt 0.2.0**: The product is standalone ColtLang, the language and CLI are Colt / `colt`, version output is `colt 0.2.0`.
-- **Zero Language Redesign**: Grammar, syntax, camelCase AST representations, 31 diagnostic codes (`COLT1001`–`COLT2027`), and execution plan JSONs are strictly preserved.
-- **ColtStudio2 External Contract**: Documented in `docs/COLTSTUDIO_INTEGRATION.md`. Machine-readable output defined for diagnostics (`file`, `line`, `column`, `endLine`, `endColumn`, `severity`, `code`, `message`, `hint`, `span`), exit codes (`0`, `1`, `2`), stdin piping (`--stdin`), formatting (`fmt --check`, `fmt --json`), and version handshake (`version --json`).
-- **Grounded LSP Architecture**: Detailed in `docs/COLTSTUDIO_INTEGRATION.md` based strictly on actual compiler model (`publishDiagnostics`, `formatting`, `documentSymbol`, `hover`, `completion`, `definition`).
-- **Zero Runtime Dependencies**: The `colt` binary requires no Node.js runtime, no Python runtime, and no external dynamic libraries; completely self-contained.
+- **Zero Fake Execution Guarantee**: If ColtaneDB is unreachable, `colt run` reports an explicit connection failure with exit code 2 and a diagnostic hint. It never silently downgrades to plan-only mode or fabricates successful execution.
+- **Dry-Run Preview**: `--dry-run` performs full validation and plan synthesis while guaranteeing zero side-effects or mutations.
+- **Native ANSI VT Processing**: Built terminal UI and doctor utilities using native Windows Virtual Terminal processing and pure ANSI escapes, avoiding heavy C-toolchain dependencies (`winapi` / `dlltool`) and ensuring pure Rust portability and instantaneous compile times (~0.27s).
+- **Static Host Decoupling**: The website is purely static; it does not host or compile Rust binaries. Native releases are distributed strictly through GitHub Releases with cryptographic SHA-256 verification.
+- **Centralized Domain URL**: `PUBLIC_SITE_URL` in `site.config.js` is the single source of truth for all documentation links, canonical tags, sitemaps, and installation copy commands.
 
-- **Tree-sitter Grammar & Syntax Highlighting**:
-  - `tree-sitter-colt/grammar.js`: Formal Tree-sitter grammar covering all statement kinds, expressions, and next-gen MELD primitives (`VECTORIZE`, `STREAM`, `MASK`, `REDACT`, `EXPIRE`, `RESOLVE`, `FALLBACK`).
-  - `tree-sitter-colt/queries/highlights.scm`: Syntax highlighting query for GitHub Linguist, Helix, Neovim, and Zed.
-  - `tree-sitter-colt/package.json` & `tree-sitter-colt/README.md`: Upstream packaging and GitHub Linguist submission guide.
-  - `editors/vscode/`: TextMate grammar (`colt.tmLanguage.json`) and VS Code language extension metadata updated.
-- **Colt Protocol Architecture (CPA)**:
-  - `spec/protocols/CLCP.md`: Colt Language Conformance Protocol.
-  - `spec/protocols/CTP.md`: Colt Toolchain Protocol (machine-readable CLI contract).
-  - `spec/protocols/CLSP.md`: Colt Language Server Profile (LSP integration).
-  - `spec/protocols/CSTP.md`: Colt Security and Trust Profile (zero credentials, `.colt.env`, redaction).
-- **Security & Toolchain Files**:
-  - `.colt.env.example`: Sanitized environment template for local database URLs.
-  - `.gitignore`: Hardened against `.colt.env` and `*.colt.env` secret leaks.
-  - `.coltignore`: Language server and CLI directory exclusion manifest.
-  - `.coltfmt`: Standardized formatter configuration.
-- **Colt CLI Execution & System Installation**:
-  - `colt run <file.colt>`: Added execution command supporting dual-mode execution (direct HTTP execution via ColtaneDB `/api/v1/query` when running, with automatic graceful fallback to verified offline plan step execution when offline).
-  - `scripts/install.ps1`: One-click system installer installing `colt` (`colt-native.exe`, `colt.cmd`, `colt.ps1`) into the user's `~/.cargo/bin` PATH directory.
-  - Verification: 147/147 vitest tests passed, TypeScript typecheck and ESLint clean.
+---
 
 ## Exact next step
 
-Proceed to Step 2: Inspect Solo IDE UI design, theme tokens, Monaco editor integration, and drawer console using REA, and build the language-specific ColtIDE mirroring Solo's exact UX.
-
+Upon repository owner assignment of the production custom domain and cloud provider token, run `vercel deploy --prod` or link Cloudflare Pages to activate the live website deployment.

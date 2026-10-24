@@ -689,6 +689,9 @@ Every diagnostic carries a unique code, clear message, source span, and hint:
 ### 17.1 Command-line Tool `colt`
 | Command | Purpose | Output / Flags |
 | :--- | :--- | :--- |
+| `colt` (no args) | Open native interactive Terminal UI (TUI) | Full-screen interactive workspace |
+| `colt run file.colt` | Execute whole-file declarative program against ColtaneDB | `--dry-run`, `--json`, `--verbose`, `--quiet` |
+| `colt doctor` | Inspect toolchain, environment, and backend health | `--json` |
 | `colt check file.colt` | Parse and validate; print diagnostics | `--json`, `--stdin`, `--quiet` |
 | `colt plan file.colt` | Show the multi-engine execution plan without running | `--json`, `--stdin` |
 | `colt fmt file.colt` | Idempotently format source code | `--stdin`, `--check`, `--json` |
@@ -696,6 +699,14 @@ Every diagnostic carries a unique code, clear message, source span, and hint:
 | `colt lex file.colt` | Tokenize and print token stream | `--json`, `--stdin` |
 | `colt capabilities` | Inspect engine capability matrix | `--json` |
 | `colt version` | Print toolchain version | `--json` |
+
+#### Process Exit Codes
+- **`0` (Success)**: Command completed successfully, or validation passed with zero errors.
+- **`1` (Compilation Error)**: Source failed lexer, parser, or semantic check (`COLT1001`–`COLT2027`).
+- **`2` (Runtime Error)**: ColtaneDB backend is offline, connection refused, or execution failed.
+
+#### Interactive Terminal Workspace (TUI)
+Running `colt` with no arguments in an interactive terminal launches the Colt Terminal UI with dark/copper/light themes, live command execution, and built-in slash commands (`/run`, `/check`, `/plan`, `/doctor`, `/capabilities`, `/theme`, `/history`, `/clear`, `/help`, `/exit`). The TUI strictly honors the `NO_COLOR` standard.
 
 ### 17.2 Structured Machine-Readable Output
 Every `colt` command accepts `--json` to produce machine-readable contracts designed for external IDEs and CI/CD pipelines. Diagnostics follow a standardized schema:

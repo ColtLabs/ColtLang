@@ -1,8 +1,10 @@
 pub mod args;
 pub mod commands;
 pub mod diagnostics;
+pub mod execution;
 pub mod exit_code;
 pub mod source;
+pub mod tui;
 pub mod usage;
 
 use args::{parse_args, CommandName};
@@ -23,6 +25,10 @@ where
         }
     };
 
+    if options.command == CommandName::Interactive {
+        return tui::start_tui();
+    }
+
     if options.command == CommandName::Help {
         print!("{}", help_text());
         return ExitCode::SUCCESS;
@@ -35,10 +41,12 @@ where
                 "version": "0.2.0",
                 "protocolVersion": "1",
                 "capabilities": [
+                    "run",
                     "check",
                     "plan",
                     "parse",
                     "lex",
+                    "doctor",
                     "fmt",
                     "capabilities"
                 ]
@@ -54,6 +62,10 @@ where
         return commands::capabilities::run_capabilities(&options);
     }
 
+    if options.command == CommandName::Doctor {
+        return commands::doctor::run_doctor(&options);
+    }
+
     let source = match read_source(options.file.as_deref(), options.stdin) {
         Ok(src) => src,
         Err(err) => {
@@ -63,6 +75,7 @@ where
     };
 
     match options.command {
+        CommandName::Run => commands::run::run_run(&source, &options),
         CommandName::Check => commands::check::run_check(&source, &options),
         CommandName::Plan => commands::plan::run_plan(&source, &options),
         CommandName::Parse => commands::parse::run_parse(&source, &options),
@@ -92,6 +105,39 @@ mod tests {
     fn test_cli_check_library() {
         let path = concat!(env!("CARGO_MANIFEST_DIR"), "/../../examples/library.colt");
         let code = run(["check", path]);
+        assert_eq!(code, ExitCode::SUCCESS);
+    }
+
+    #[test]
+    fn test_cli_plan_library() {
+        let path = concat!(env!("CARGO_MANIFEST_DIR"), "/../../examples/library.colt");
+        let code = run(["plan", path]);
+        assert_eq!(code, ExitCode::SUCCESS);
+    }
+
+    #[test]
+    fn test_cli_run_dry_run_library() {
+        let path = concat!(env!("CARGO_MANIFEST_DIR"), "/../../examples/library.colt");
+        let code = run(["run", path, "--dry-run"]);
+        assert_eq!(code, ExitCode::SUCCESS);
+    }
+
+    #[test]
+    fn test_cli_run_dry_run_json() {
+        let path = concat!(env!("CARGO_MANIFEST_DIR"), "/../../examples/library.colt");
+        let code = run(["run", path, "--dry-run", "--json"]);
+        assert_eq!(code, ExitCode::SUCCESS);
+    }
+
+    #[test]
+    fn test_cli_doctor() {
+        let code = run(["doctor"]);
+        assert_eq!(code, ExitCode::SUCCESS);
+    }
+
+    #[test]
+    fn test_cli_doctor_json() {
+        let code = run(["doctor", "--json"]);
         assert_eq!(code, ExitCode::SUCCESS);
     }
 

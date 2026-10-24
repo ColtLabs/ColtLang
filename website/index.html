@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ColtLang — One Declarative Language for Every Kind of Data</title>
+  <meta name="description" content="Colt is a high-performance, declarative, multi-paradigm query and data language unifying relational tables, nested documents, key-value stores, vector embeddings, and graphs.">
+  <link rel="canonical" href="https://coltlang.dev/">
+  
+  <!-- Open Graph / Social Metadata -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://coltlang.dev/">
+  <meta property="og:title" content="ColtLang — One Declarative Language for Every Kind of Data">
+  <meta property="og:description" content="High-performance declarative multi-paradigm data language and native Rust CLI toolchain.">
+  <meta property="og:image" content="/colt-logo.svg">
+
+  <link rel="icon" type="image/svg+xml" href="/colt-logo.svg">
+  <link rel="stylesheet" href="/styles/main.css">
+  <script defer src="/scripts/app.js"></script>
+</head>
+<body>
+
+  <!-- Site Navigation -->
+  <header class="site-header">
+    <div class="nav-container">
+      <a href="/" class="brand-link">
+        <img src="/colt-logo.svg" alt="Colt Logo" class="brand-logo">
+        <span>ColtLang</span>
+        <span class="brand-badge">v0.2.0</span>
+      </a>
+
+      <nav>
+        <ul class="nav-links">
+          <li><a href="/" class="nav-link active">Home</a></li>
+          <li><a href="/install" class="nav-link">Install</a></li>
+          <li><a href="/docs" class="nav-link">Documentation</a></li>
+          <li><a href="/migration" class="nav-link">Migration</a></li>
+        </ul>
+      </nav>
+
+      <div class="nav-actions">
+        <button id="theme-toggle" class="theme-toggle-btn" aria-label="Toggle theme">☀</button>
+        <a href="https://github.com/ColtLabs/ColtLang" target="_blank" rel="noopener" class="btn btn-secondary" style="padding: 0.5rem 1rem; font-size: 0.85rem;">
+          GitHub
+        </a>
+        <a href="/install" class="btn btn-primary" style="padding: 0.5rem 1rem; font-size: 0.85rem;">
+          Install CLI
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <main>
+    <section class="hero-section">
+      <div class="hero-pill">
+        <span>⚡ Colt 0.2.0 Native Toolchain & Real Runtime</span>
+      </div>
+
+      <h1 class="hero-title">
+        One language for <br>
+        <span class="gradient-text">every kind of data.</span>
+      </h1>
+
+      <p class="hero-subtitle">
+        Colt is a declarative, multi-paradigm data language that unifies relational tables, nested documents,
+        key-value caches, vector embeddings, and temporal series under a single compiler, execution engine, and native Rust CLI.
+      </p>
+
+      <div class="hero-ctas">
+        <a href="/install" class="btn btn-primary">
+          Install Colt CLI
+        </a>
+        <a href="/docs" class="btn btn-secondary">
+          Explore Documentation
+        </a>
+        <div class="quick-install-box">
+          <code>irm https://coltlang.dev/install.ps1 | iex</code>
+          <button class="copy-btn" data-code="irm https://coltlang.dev/install.ps1 | iex">Copy</button>
+        </div>
+      </div>
+
+      <!-- Interactive Terminal Simulator -->
+      <div class="terminal-demo-card">
+        <div class="terminal-header">
+          <div class="terminal-dots">
+            <span class="dot dot-red"></span>
+            <span class="dot dot-yellow"></span>
+            <span class="dot dot-green"></span>
+          </div>
+          <span class="terminal-title">colt — interactive native terminal preview</span>
+          <span style="font-size:0.75rem; color:var(--text-muted); font-family:var(--font-mono);">Rust Native</span>
+        </div>
+
+        <div class="terminal-tabs">
+          <button class="term-tab active" data-scenario="dry-run">colt run --dry-run</button>
+          <button class="term-tab" data-scenario="doctor">colt doctor</button>
+          <button class="term-tab" data-scenario="check">colt check</button>
+          <button class="term-tab" data-scenario="plan">colt plan</button>
+          <button class="term-tab" data-scenario="live">colt run (live)</button>
+        </div>
+
+        <div id="terminal-content" class="terminal-body">
+          <!-- Populated dynamically by app.js -->
+        </div>
+      </div>
+    </section>
+
+    <!-- Architecture & Core Mechanics -->
+    <section class="section">
+      <div class="section-header">
+        <div class="section-pill">Architecture</div>
+        <h2 class="section-title">How Colt Executes Multi-Paradigm Data</h2>
+        <p class="section-desc">
+          Colt separates declarative language planning from database execution, ensuring deterministic execution plans, zero SQL injection, and unified access across heterogeneous backends.
+        </p>
+      </div>
+
+      <div class="grid-3">
+        <div class="card">
+          <div class="card-icon">💎</div>
+          <h3 class="card-title">Declarative Language Pipeline</h3>
+          <p class="card-text">
+            Source files (<code>.colt</code>) pass through a high-performance Rust zero-alloc tokenizer and Pratt parser into a canonical camelCase AST. Language constructs are strictly validated against catalog declarations.
+          </p>
+        </div>
+
+        <div class="card">
+          <div class="card-icon">🛡️</div>
+          <h3 class="card-title">Capability & Plan Gatekeeper</h3>
+          <p class="card-text">
+            The compiler enforces schema constraints, type bounds, and engine capability matrices. Queries never embed raw literal strings in query text—all parameters are strictly bound and separated.
+          </p>
+        </div>
+
+        <div class="card">
+          <div class="card-icon">⚡</div>
+          <h3 class="card-title">Real Multi-Paradigm Runtime</h3>
+          <p class="card-text">
+            <code>colt run</code> orchestrates execution through verified database adapters (Postgres, Neon, Supabase, Redis, Firestore, MongoDB) delivering structured, paradigm-aware results without mock fallbacks.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Supported Paradigms Matrix -->
+    <section class="section">
+      <div class="section-header">
+        <div class="section-pill">Supported Systems</div>
+        <h2 class="section-title">Multi-Paradigm Capability Matrix</h2>
+        <p class="section-desc">
+          Verified database paradigms supported across the compiler, plan generator, and ColtaneDB execution runtime.
+        </p>
+      </div>
+
+      <div class="table-wrapper">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Paradigm</th>
+              <th>Language Constructs</th>
+              <th>Primary Backends</th>
+              <th>Output Type</th>
+              <th>Verification Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Relational</strong></td>
+              <td><code>FIND</code>, <code>PUT</code>, <code>CREATE</code>, <code>DELETE</code></td>
+              <td>PostgreSQL, Neon, Supabase</td>
+              <td>Structured Tabular Rows</td>
+              <td><span class="badge badge-success">ACTIVE (Tier-1)</span></td>
+            </tr>
+            <tr>
+              <td><strong>Document</strong></td>
+              <td><code>doc</code> type, <code>field.subpath</code> paths</td>
+              <td>Firestore, MongoDB, JSONB</td>
+              <td>Hierarchical Document Tree</td>
+              <td><span class="badge badge-success">ACTIVE</span></td>
+            </tr>
+            <tr>
+              <td><strong>Key-Value</strong></td>
+              <td><code>@backend(cache)</code>, <code>@ttl(30m)</code></td>
+              <td>Upstash Redis</td>
+              <td>Key-Value Card & TTL</td>
+              <td><span class="badge badge-success">ACTIVE</span></td>
+            </tr>
+            <tr>
+              <td><strong>Vector Search</strong></td>
+              <td><code>vector(N)</code>, <code>@index(hnsw)</code></td>
+              <td>Neon (pgvector)</td>
+              <td>Ranked Matches & Distance</td>
+              <td><span class="badge badge-success">ACTIVE</span></td>
+            </tr>
+            <tr>
+              <td><strong>Graph / Links</strong></td>
+              <td><code>link&lt;Collection&gt;</code>, foreign refs</td>
+              <td>PostgreSQL Foreign Keys</td>
+              <td>Node & Edge Traversals</td>
+              <td><span class="badge badge-success">ACTIVE</span></td>
+            </tr>
+            <tr>
+              <td><strong>Time-Series</strong></td>
+              <td><code>time</code>, <code>@default(now)</code>, durations</td>
+              <td>PostgreSQL timestamptz</td>
+              <td>Temporal Series</td>
+              <td><span class="badge badge-success">ACTIVE</span></td>
+            </tr>
+            <tr>
+              <td><strong>Atomic Transactions</strong></td>
+              <td><code>ATOMIC { ... }</code></td>
+              <td>PostgreSQL Transaction Blocks</td>
+              <td>All-or-Nothing Mutation</td>
+              <td><span class="badge badge-success">ACTIVE</span></td>
+            </tr>
+            <tr>
+              <td><strong>MELD Primitives</strong></td>
+              <td><code>VECTORIZE</code>, <code>STREAM</code>, <code>MASK</code></td>
+              <td>Next-Gen Engine</td>
+              <td>Reserved (Emits COLT2003)</td>
+              <td><span class="badge badge-warning">RESERVED v1.x</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- Code Showcase Comparison -->
+    <section class="section">
+      <div class="section-header">
+        <div class="section-pill">Declarative Simplicity</div>
+        <h2 class="section-title">See Colt in Action</h2>
+        <p class="section-desc">
+          Compare clean, unified Colt source code with the generated backend-neutral execution plan.
+        </p>
+      </div>
+
+      <div class="code-split">
+        <div class="code-card">
+          <div class="code-header">
+            <span>examples/library.colt</span>
+            <span>Colt Source</span>
+          </div>
+          <pre class="code-content"><code><span style="color:#8D99AE;">-- 1. Connection & Collection Definitions</span>
+CONNECT main AS postgres(env("DATABASE_URL"))
+DEFAULT CONNECTION main
+
+DEFINE COLLECTION books STRICT {
+  id: uuid @key,
+  title: text,
+  author: link&lt;authors&gt;,
+  tags: list&lt;text&gt;,
+  metadata: doc,
+  embedding: vector(3) @index(hnsw),
+  views: int @default(0)
+}
+
+<span style="color:#8D99AE;">-- 2. Declarative Query with Projection & Filter</span>
+FIND books SELECT title, author, metadata.edition
+WHERE views &gt; 10
+ORDER BY views DESC
+LIMIT 20
+
+<span style="color:#8D99AE;">-- 3. Atomic Transaction</span>
+ATOMIC {
+  DELETE books:33333333-3333-4333-8333-333333333333;
+  PUT authors:22222222-2222-4222-8222-222222222222 {
+    name: "Ursula K. Le Guin"
+  }
+}</code></pre>
+        </div>
+
+        <div class="code-card">
+          <div class="code-header">
+            <span>colt plan --json</span>
+            <span>Execution Plan</span>
+          </div>
+          <pre class="code-content"><code>{
+  "source": "library.colt",
+  "status": "ok",
+  "plan": {
+    "steps": [
+      {
+        "backend": "main",
+        "operation": "schema.create",
+        "collection": "books",
+        "parameterizedStatement": "CREATE TABLE \"books\" (...)"
+      },
+      {
+        "backend": "main",
+        "operation": "query",
+        "collection": "books",
+        "parameterizedStatement": "SELECT \"title\", \"author\", jsonb_extract_path(\"metadata\", $1) FROM \"books\" WHERE (\"views\" &gt; $2) ORDER BY \"views\" DESC LIMIT $3",
+        "parameters": [
+          { "kind": "path", "value": ["edition"] },
+          { "kind": "constant", "value": 10 },
+          { "kind": "constant", "value": 20 }
+        ]
+      }
+    ]
+  }
+}</code></pre>
+        </div>
+      </div>
+    </section>
+
+    <!-- Platform Installation Section -->
+    <section id="install" class="section">
+      <div class="section-header">
+        <div class="section-pill">Get Started</div>
+        <h2 class="section-title">One-Command Installation</h2>
+        <p class="section-desc">
+          Install the native Colt executable in seconds on Windows, macOS, or Linux. No Rust toolchain or Node.js required.
+        </p>
+      </div>
+
+      <div class="grid-3" style="max-width: 960px; margin: 0 auto;">
+        <div class="card">
+          <h3 class="card-title">Windows (PowerShell)</h3>
+          <p class="card-text" style="margin-bottom: 1rem;">Recommended for Windows 10 & 11.</p>
+          <div class="quick-install-box" style="width: 100%; justify-content: space-between;">
+            <code style="font-size: 0.8rem;">irm https://coltlang.dev/install.ps1 | iex</code>
+            <button class="copy-btn" data-code="irm https://coltlang.dev/install.ps1 | iex">Copy</button>
+          </div>
+        </div>
+
+        <div class="card">
+          <h3 class="card-title">Windows (CMD)</h3>
+          <p class="card-text" style="margin-bottom: 1rem;">For traditional Command Prompt environments.</p>
+          <div class="quick-install-box" style="width: 100%; justify-content: space-between;">
+            <code style="font-size: 0.75rem;">curl -fsSL https://coltlang.dev/install.cmd -o install.cmd &amp;&amp; install.cmd &amp;&amp; del install.cmd</code>
+            <button class="copy-btn" data-code="curl -fsSL https://coltlang.dev/install.cmd -o install.cmd &amp;&amp; install.cmd &amp;&amp; del install.cmd">Copy</button>
+          </div>
+        </div>
+
+        <div class="card">
+          <h3 class="card-title">macOS &amp; Linux</h3>
+          <p class="card-text" style="margin-bottom: 1rem;">Universal shell installer with checksum validation.</p>
+          <div class="quick-install-box" style="width: 100%; justify-content: space-between;">
+            <code style="font-size: 0.8rem;">curl -fsSL https://coltlang.dev/install.sh | sh</code>
+            <button class="copy-btn" data-code="curl -fsSL https://coltlang.dev/install.sh | sh">Copy</button>
+          </div>
+        </div>
+      </div>
+
+      <div style="text-align: center; margin-top: 2.5rem;">
+        <a href="/install" class="btn btn-secondary">
+          View Complete Installation Guide &amp; Verification Steps &rarr;
+        </a>
+      </div>
+    </section>
+  </main>
+
+  <!-- Site Footer -->
+  <footer class="site-footer">
+    <div class="footer-content">
+      <div class="footer-brand">
+        <div style="display:flex; align-items:center; gap:0.5rem;">
+          <img src="/colt-logo.svg" alt="Colt Logo" style="width:24px; height:24px;">
+          <span style="font-weight:700; font-size:1.1rem;">ColtLang</span>
+        </div>
+        <p class="footer-desc">
+          High-performance, declarative, multi-paradigm database language. Built by ColtLabs.
+        </p>
+      </div>
+
+      <div>
+        <h4 class="footer-col-title">Product</h4>
+        <ul class="footer-links">
+          <li><a href="/install">Installation</a></li>
+          <li><a href="/docs">Documentation</a></li>
+          <li><a href="/docs#cli">CLI Reference</a></li>
+          <li><a href="/migration">Hosting Migration</a></li>
+        </ul>
+      </div>
+
+      <div>
+        <h4 class="footer-col-title">Ecosystem</h4>
+        <ul class="footer-links">
+          <li><a href="https://github.com/ColtLabs/ColtLang" target="_blank" rel="noopener">GitHub Repository</a></li>
+          <li><a href="https://github.com/ColtLabs/ColtLang/releases" target="_blank" rel="noopener">Releases &amp; Checksums</a></li>
+          <li><a href="https://github.com/ColtLabs/ColtStudio2" target="_blank" rel="noopener">ColtStudio2 Desktop IDE</a></li>
+        </ul>
+      </div>
+
+      <div>
+        <h4 class="footer-col-title">Legal &amp; Trust</h4>
+        <ul class="footer-links">
+          <li><a href="https://github.com/ColtLabs/ColtLang/blob/main/LICENSE" target="_blank" rel="noopener">Apache-2.0 License</a></li>
+          <li><a href="https://github.com/ColtLabs/ColtLang/blob/main/SECURITY.md" target="_blank" rel="noopener">Security Policy</a></li>
+          <li><a href="/docs#privacy">Privacy &amp; Telemetry</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <span>&copy; 2026 ColtLabs. Open source under Apache-2.0.</span>
+      <span>ColtLang Toolchain v0.2.0</span>
+    </div>
+  </footer>
+
+</body>
+</html>

@@ -141,3 +141,52 @@ fn test_structured_diagnostic_schema() {
     assert!(first["message"].is_string());
     assert!(first["span"]["start"]["line"].is_number());
 }
+
+#[test]
+fn test_run_dry_run_json_contract() {
+    let path = fixture_path("valid.colt");
+    let path_str = path.to_str().expect("valid path");
+
+    let source = colt_cli::source::read_source(Some(path_str), false).expect("read source");
+    let opts = colt_cli::args::parse_args(["run", "--dry-run", "--json", path_str]).expect("opts");
+    assert_eq!(opts.command, colt_cli::args::CommandName::Run);
+    assert!(opts.dry_run);
+    assert!(opts.json);
+
+    let code = colt_cli::commands::run::run_run(&source, &opts);
+    assert_eq!(code, ExitCode::SUCCESS);
+}
+
+#[test]
+fn test_run_invalid_syntax_returns_diagnostics_code_1() {
+    let path = fixture_path("invalid_syntax.colt");
+    let path_str = path.to_str().expect("valid path");
+
+    let source = colt_cli::source::read_source(Some(path_str), false).expect("read source");
+    let opts = colt_cli::args::parse_args(["run", path_str]).expect("opts");
+
+    let code = colt_cli::commands::run::run_run(&source, &opts);
+    assert_eq!(code, ExitCode::DIAGNOSTICS);
+}
+
+#[test]
+fn test_run_offline_runtime_returns_usage_error_code_2() {
+    let path = fixture_path("valid.colt");
+    let path_str = path.to_str().expect("valid path");
+
+    let source = colt_cli::source::read_source(Some(path_str), false).expect("read source");
+    let opts = colt_cli::args::parse_args(["run", path_str]).expect("opts");
+
+    let code = colt_cli::commands::run::run_run(&source, &opts);
+    // When offline, colt run must fail with code 2, NEVER pretend execution succeeded!
+    assert_eq!(code, ExitCode::USAGE_ERROR);
+}
+
+#[test]
+fn test_doctor_json_contract() {
+    let opts = colt_cli::args::parse_args(["doctor", "--json"]).expect("opts");
+    assert_eq!(opts.command, colt_cli::args::CommandName::Doctor);
+    let code = colt_cli::commands::doctor::run_doctor(&opts);
+    assert_eq!(code, ExitCode::SUCCESS);
+}
+

@@ -4,15 +4,15 @@ param(
   [string[]]$Arguments
 )
 
-if ($null -eq $Arguments -or $Arguments.Count -eq 0) {
-  & "$PSScriptRoot\colt-native.exe" --help
+$Exe = Join-Path $PSScriptRoot "colt.exe"
+if (-not (Test-Path $Exe)) {
+  $Exe = Join-Path $PSScriptRoot "colt-native.exe"
+}
+
+if (Test-Path $Exe) {
+  & $Exe @Arguments
   exit $LASTEXITCODE
 }
 
-if ($Arguments[0] -eq 'run') {
-  & node --import tsx "E:\Projects\ColtLang\packages\cli\src\main.ts" @Arguments
-  exit $LASTEXITCODE
-}
-
-& "$PSScriptRoot\colt-native.exe" @Arguments
+& colt @Arguments
 exit $LASTEXITCODE

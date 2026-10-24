@@ -1,15 +1,15 @@
 @ECHO OFF
 SETLOCAL
 
-IF "%~1"=="" (
-  "%~dp0colt-native.exe" --help
+IF EXIST "%~dp0colt.exe" (
+  "%~dp0colt.exe" %*
   EXIT /B %ERRORLEVEL%
 )
 
-IF /I "%~1"=="run" (
-  node --import tsx "E:\Projects\ColtLang\packages\cli\src\main.ts" %*
+IF EXIST "%~dp0colt-native.exe" (
+  "%~dp0colt-native.exe" %*
   EXIT /B %ERRORLEVEL%
 )
 
-"%~dp0colt-native.exe" %*
+colt %*
 EXIT /B %ERRORLEVEL%
