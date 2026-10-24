@@ -83,11 +83,12 @@ Current test status:
   - `.gitignore`: Hardened against `.colt.env` and `*.colt.env` secret leaks.
   - `.coltignore`: Language server and CLI directory exclusion manifest.
   - `.coltfmt`: Standardized formatter configuration.
+- **Colt CLI Execution & System Installation**:
+  - `colt run <file.colt>`: Added execution command supporting dual-mode execution (direct HTTP execution via ColtaneDB `/api/v1/query` when running, with automatic graceful fallback to verified offline plan step execution when offline).
+  - `scripts/install.ps1`: One-click system installer installing `colt` (`colt-native.exe`, `colt.cmd`, `colt.ps1`) into the user's `~/.cargo/bin` PATH directory.
+  - Verification: 147/147 vitest tests passed, TypeScript typecheck and ESLint clean.
 
 ## Exact next step
 
-Package `colt.exe` via release pipeline (`cargo-dist` / GitHub Releases) and integrate into ColtStudio2 IDE desktop repository using the contract in `docs/COLTSTUDIO_INTEGRATION.md`.
-
-
-
+Proceed to Step 2: Inspect Solo IDE UI design, theme tokens, Monaco editor integration, and drawer console using REA, and build the language-specific ColtIDE mirroring Solo's exact UX.
 

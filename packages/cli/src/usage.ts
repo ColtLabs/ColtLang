@@ -30,6 +30,7 @@ export function helpText(): string {
     '',
     'Commands:',
     '  check <file>         Lex, parse, and compile; report diagnostics. Exit 1 on any error.',
+    '  run   <file>         Compile and execute planned queries against ColtaneDB or local runner.',
     '  plan  <file>         Compile and print the backend-neutral execution plan as JSON.',
     '  parse <file>         Parse and print the AST as JSON.',
     '  lex   <file>         Lex and print the token stream.',

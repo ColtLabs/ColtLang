@@ -5,6 +5,7 @@ import { runCheck } from './commands/check.ts';
 import { runLex } from './commands/lex.ts';
 import { runParse } from './commands/parse.ts';
 import { runPlan } from './commands/plan.ts';
+import { runRun } from './commands/run.ts';
 import { createContext, processStreams, type CommandContext } from './context.ts';
 import { ExitCode, type ExitCodeValue } from './exit-code.ts';
 import { SourceReadError } from './source.ts';
@@ -16,6 +17,7 @@ type CommandRunner = (context: CommandContext) => Promise<ExitCodeValue>;
 const runners: Readonly<Record<string, CommandRunner>> = {
   check: runCheck,
   plan: runPlan,
+  run: runRun,
   lex: runLex,
   parse: runParse,
   capabilities: runCapabilities,

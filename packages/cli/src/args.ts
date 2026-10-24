@@ -1,11 +1,11 @@
 import { UsageError } from './usage-error.ts';
 
-export const CommandNames = ['check', 'plan', 'lex', 'parse', 'capabilities', 'help', 'version'] as const;
+export const CommandNames = ['check', 'plan', 'run', 'lex', 'parse', 'capabilities', 'help', 'version'] as const;
 
 export type CommandName = (typeof CommandNames)[number];
 
 /** Commands that consume `.colt` source, either from a file or from standard input. */
-const sourceCommands: ReadonlySet<CommandName> = new Set(['check', 'plan', 'lex', 'parse']);
+const sourceCommands: ReadonlySet<CommandName> = new Set(['check', 'plan', 'run', 'lex', 'parse']);
 
 export interface CliOptions {
   readonly command: CommandName;
