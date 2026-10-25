@@ -1,0 +1,60 @@
+#colt 0.2
+
+CONNECT users_db AS postgres(env("DATABASE_URL"))
+
+CONNECT attendance_db AS mongodb(env("MONGODB_URI"))
+
+DEFAULT CONNECTION users_db
+
+DEFINE COLLECTION users STRICT @backend(users_db) {
+  id: uuid @key,
+  name: text @unique,
+  email: text @unique,
+  department: text,
+  joined: time @default(now)
+}
+
+DEFINE COLLECTION attendance FLEXIBLE @backend(attendance_db) {
+  id: uuid @key,
+  user_id: link<users>,
+  check_in: time @default(now),
+  status: text,
+  device: doc,
+  location: doc
+}
+
+PUT users:00000000-0000-4000-8000-000000000001 {
+  name: "Alice Johnson",
+  email: "alice.johnson@example.com",
+  department: "Engineering"
+}
+
+PUT users:00000000-0000-4000-8000-000000000002 {
+  name: "Bob Smith",
+  email: "bob.smith@example.com",
+  department: "Design"
+}
+
+PUT attendance:10000000-0000-4000-8000-000000000001 {
+  user_id: users:00000000-0000-4000-8000-000000000001,
+  status: "present",
+  device: { os: "macOS", browser: "Chrome 128", ip: "192.168.1.42" },
+  location: { building: "HQ", floor: 4, room: "402" }
+}
+
+PUT attendance:20000000-0000-4000-8000-000000000002 {
+  user_id: users:00000000-0000-4000-8000-000000000002,
+  status: "remote",
+  device: { os: "Linux", browser: "Firefox 130", ip: "10.0.0.15" },
+  location: { building: "Remote", city: "Seattle", country: "US" }
+}
+
+FIND users SELECT name, email, department
+WHERE department == "Engineering"
+ORDER BY joined DESC
+LIMIT 20 OFFSET 0
+
+FIND attendance SELECT id, user_id, check_in, status
+WHERE status == "present"
+ORDER BY check_in DESC
+LIMIT 50 OFFSET 0
